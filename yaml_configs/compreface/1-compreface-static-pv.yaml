@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: compreface-pv
+  namespace: compreface
+spec:
+  capacity:
+    storage: 100Mi  # Adjust the storage size as needed
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /k3s/projects/compreface  # Static path on the NFS server
+    server: 192.168.1.238               # Your NFS server's IP
+  persistentVolumeReclaimPolicy: Retain

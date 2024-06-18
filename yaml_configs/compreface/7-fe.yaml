@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: fe
+  name: cf-fe
+  namespace: compreface
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fe
+  template:
+    metadata:
+      labels:
+        app: fe
+    spec:
+      containers:
+        - image: 'exadel/compreface-fe:0.5.1'
+          name: cf-fe
+          ports:
+            - containerPort: 80
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: fe
+  name: compreface-ui
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8000
+      targetPort: 80
+  selector:
+    app: fe

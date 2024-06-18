@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: frigate-media-pvc
+  namespace: frigate
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 3000Gi  # Match or be less than the PV's capacity
+  volumeName: frigate-media-pv  # Bind explicitly to the PV created above
+  storageClassName: ''

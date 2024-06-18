@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: admin
+  name: cf-admin
+  namespace: compreface
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin
+  template:
+    metadata:
+      labels:
+        app: admin
+    spec:
+      containers:
+        - env:
+            - name: ADMIN_JAVA_OPTS
+              value: '-Xmx8g'
+            - name: EMAIL_FROM
+            - name: EMAIL_HOST
+            - name: EMAIL_PASSWORD
+            - name: EMAIL_USERNAME
+            - name: ENABLE_EMAIL_SERVER
+            - name: POSTGRES_PASSWORD
+              value: 'postgres'
+            - name: POSTGRES_URL
+              value: 'jdbc:postgresql://compreface-postgres-db:5432/frs'
+            - name: POSTGRES_USER
+              value: 'postgres'
+            - name: SPRING_PROFILES_ACTIVE
+              value: 'dev'
+          image: 'exadel/compreface-admin:0.5.1'
+          ports:
+          - containerPort: 8080
+          name: cf-admin
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: compreface-admin
+spec:
+  type: ClusterIP
+  selector:
+      app: admin
+  ports:
+  - port: 8080

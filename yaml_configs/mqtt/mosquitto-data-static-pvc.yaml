@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mosquitto-data-pvc
+  namespace: mosquitto
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi  # Match or be less than the PV's capacity
+  volumeName: mosquitto-data-pv  # Bind explicitly to the PV created above
+  storageClassName: ''

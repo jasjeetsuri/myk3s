@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homeassistant-ingress
+  namespace: home-assistant
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: home-assistant
+spec:
+  rules:
+  - host: ha.jsuri.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: homeassistant-service
+            port:
+              number: 8123
+  tls:
+  - hosts:
+    - ha.jsuri.com # Change by your domain
+    secretName: ha-jsuri-com-tls

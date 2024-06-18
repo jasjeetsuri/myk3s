@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: db
+  name: cf-db
+  namespace: compreface
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: frs
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_USER
+              value: postgres
+          image: postgres:11.5
+          name: cf-db
+          ports:
+          - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: compreface-db
+              subPath: postgres
+      restartPolicy: Always
+      volumes:
+        - name: compreface-db
+          persistentVolumeClaim:
+            claimName: compreface-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: compreface-postgres-db
+spec:
+  type: ClusterIP
+  selector:
+      app: db
+  ports:
+  - port: 5432

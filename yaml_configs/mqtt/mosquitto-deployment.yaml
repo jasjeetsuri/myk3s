@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mosquitto
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mosquitto
+  namespace: mosquitto
+  labels:
+    app: mosquitto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mosquitto
+  template:
+    metadata:
+      labels:
+        name: mosquitto
+        app: mosquitto
+    spec:
+      containers:
+        - name: mosquitto
+          image: eclipse-mosquitto:latest
+          ports:
+          - containerPort: 8080
+            name: websocket
+          - containerPort: 1883
+            name: mqtt
+          volumeMounts:
+          - mountPath: /mosquitto/config
+            name: mosquitto-config
+            subPath: config
+          - mountPath: /mosquitto/data
+            name: mosquitto-data
+            subPath: data
+      volumes:
+      - name: mosquitto-data
+        persistentVolumeClaim:
+          claimName: mosquitto-data-pvc
+      - name: mosquitto-config
+        persistentVolumeClaim:
+          claimName: mosquitto-config-pvc
