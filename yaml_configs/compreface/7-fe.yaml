@@ -28,6 +28,7 @@ metadata:
   labels:
     app: fe
   name: compreface-ui
+  namespace: compreface
 spec:
   type: LoadBalancer
   ports:
