@@ -29,6 +29,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: compreface-core
+  namespace: compreface
 spec:
   type: ClusterIP
   selector:
