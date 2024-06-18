@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: double-take-config-pvc
+  namespace: double-take
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi  # Match or be less than the PV's capacity
+  volumeName: double-take-pv  # Bind explicitly to the PV created above
+  storageClassName: ''

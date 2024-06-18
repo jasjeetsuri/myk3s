@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+  namespace: home-assistant
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: me@jsuri.com # replace for your valid email
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+    - dns01:
+        cloudflare:
+          email: me@jsuri.com
+          apiTokenSecretRef:
+            name: cloudflare-api-token
+            key: api-token

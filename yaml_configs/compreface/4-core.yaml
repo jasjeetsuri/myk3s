@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: core
+  name: cf-core
+  namespace: compreface
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: core
+  template:
+    metadata:
+      labels:
+        app: core
+    spec:
+      containers:
+        - env:
+            - name: ML_PORT
+              value: "3000"
+          image: 'exadel/compreface-core:0.5.1'
+          ports:
+          - containerPort: 3000
+          name: cf-core
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: compreface-core
+spec:
+  type: ClusterIP
+  selector:
+      app: core
+  ports:
+  - port: 3000
