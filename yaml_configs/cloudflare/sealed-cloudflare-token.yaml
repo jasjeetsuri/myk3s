@@ -1,0 +1,15 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: cloudflare-token
+  namespace: cloudflare-server
+spec:
+  encryptedData:
+    token: AgAwUBQxo1MLuR8/KDTxLsg2GrFMKB+wYPJ6MSMZ05zuIpV/UeWpg636rasUj25GQ61WzXw0f7lg7hxQOOeYiT1oPyz4YpHfghhn5TbgGHjXD07j+iDHyRZucDUiLox9EckzELlIG6bbeJWJCexPww39nHeVhs16W+>
+  template:
+    metadata:
+      creationTimestamp: null
+      name: cloudflare-token
+      namespace: cloudflare-server
+    type: Opaque

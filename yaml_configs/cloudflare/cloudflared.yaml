@@ -29,4 +29,10 @@ spec:
             - "--no-autoupdate"
             - "run"
             - "--token"
-            - "eyJhIjoiNzhkMjA0OTViOWQ1ODkyOTFjMDczMzQ1ZGMwOGE3ZGEiLCJ0IjoiMGQyMjkxODktMjRhNS00YTI4LTk0ZjYtODQ0NWEyZTk2Y2FmIiwicyI6Ik9HWTBaalJpTVdRdE0yUXpaUzAwTkRnNExXSmxZamN0WldObU5tSmtOakUxT0dVNSJ9"
+            - "$(CLOUDFLARE_TOKEN)"  # Use environment variable
+          env:
+            - name: CLOUDFLARE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare-token  # Name of the decrypted Secret
+                  key: token  # Key containing the token
