@@ -114,7 +114,7 @@ replace_ip_addresses() {
   echo "Searching for IP addresses in format 192.168.x.x and replacing with $LOCAL_IP..."
   
   # Find files that do not contain "pv" in the filename and replace IP addresses
-  find "$TARGET_DIR" -type f ! -name "*pv*" -exec sed -i.bak -E "s/192\.168\.[0-9]+\.[0-9]+/$LOCAL_IP/g" {} \;
+  find "$TARGET_DIR" -type f ! -name "*pv*" -exec sed -i -E "s/192\.168\.[0-9]+\.[0-9]+/$LOCAL_IP/g" {} \;
 
   echo "IP address replacement completed, excluding files with 'pv' in the name."
 }
