@@ -45,9 +45,9 @@ apply_secrets() {
   NFS_SERVER="192.168.1.238"
   NFS_SHARE="/k3s"
   MOUNT_POINT="/mnt/nas"
-  LOCAL_SECRETS_DIR="/mnt/jas/projects/secrets"
+  LOCAL_SECRETS_DIR="/mnt/nas/projects/secrets"
   SECRET_FILE="sealed-secrets-key-backup.yaml"
-  DEST_DIR="/var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/cloudflare"
+  DEST_DIR="/var/lib/rancher/k3s/server/manifests/"
   KUBE_NAMESPACE="kube-system"
 
   # Ensure the destination directory exists
