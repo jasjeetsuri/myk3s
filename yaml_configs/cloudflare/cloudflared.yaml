@@ -47,7 +47,7 @@ spec:
             - "--no-autoupdate"
             - "run"
             - "--token"
-            - "${CLOUDFLARE_TOKEN}"  # Use environment variable
+            - "$(CLOUDFLARE_TOKEN)"  # Use environment variable
           env:
             - name: CLOUDFLARE_TOKEN
               valueFrom:
