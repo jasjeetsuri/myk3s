@@ -46,7 +46,7 @@ apply_secrets() {
   NFS_SHARE="/k3s"
   MOUNT_POINT="/mnt/nas"
   LOCAL_SECRETS_DIR="/mnt/nas/projects/secrets"
-  SECRET_FILE="sealed-secrets-key-backup.yaml"
+  SECRET_FILE="sealed-secrets-priv-key-backup.yaml"
   DEST_DIR="/var/lib/rancher/k3s/server/manifests/"
   KUBE_NAMESPACE="kube-system"
 

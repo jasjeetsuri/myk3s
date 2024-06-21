@@ -27,8 +27,6 @@ spec:
         - name: mosquitto
           image: eclipse-mosquitto:latest
           ports:
-          - containerPort: 8080
-            name: websocket
           - containerPort: 1883
             name: mqtt
           volumeMounts:
