@@ -4,6 +4,7 @@ metadata:
   name: mosquitto-service
   namespace: mosquitto
 spec:
+  type: LoadBalancer
   selector:
     app: mosquitto
   ports:
@@ -11,9 +12,3 @@ spec:
       port: 1883
       targetPort: 1883
       protocol: TCP
-    - name: ws
-      port: 8080
-      targetPort: 8080
-      protocol: TCP
-  externalIPs:
-  - 192.168.1.159
