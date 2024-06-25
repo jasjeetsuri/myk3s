@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firetv-hook-kitchen
+  namespace: firetv
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+     app: firetv
+  template:
+    metadata:
+      labels:
+        app: firetv
+    spec:
+      containers:
+        - env:
+            - name: FIRETV_HOST
+              value: 192.168.1.49
+            - name: FIRETV_LAUNCHER
+              value: com.wolf.firelauncher/.screens.launcher.LauncherActivity
+          image: mimeau/firetv-hook
+          name: firetv-hook-kitchen
+          ports:
+            - containerPort: 5037
