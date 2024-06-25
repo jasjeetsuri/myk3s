@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: firetv-hook-masterbed
+  namespace: firetv
+spec:
+  ports:
+    - name: "adb"
+      port: 5037
+      targetPort: 5037
+  selector:
+    app: firetv
+  type: LoadBalancer
