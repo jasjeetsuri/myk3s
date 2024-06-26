@@ -22,13 +22,13 @@ install_k3s() {
 install_coral_tpu_and_intel_gpu_drivers() {
   apt install gnupg -y
   echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
-  apt install libedgetpu1 intel-media-va-driver i965-va-driver vainfo  -y
+  apt install libedgetpu1-std intel-media-va-driver i965-va-driver vainfo  -y
 }
 
 # Step 1: Install kubeseal if not already installed
 install_kubeseal() {
   if ! command --version kubeseal &> /dev/null; then
-    apt install wget curl sudo jq -std -y
+    apt install wget curl sudo jq -y
 
     # Fetch the latest sealed-secrets version using GitHub API
     KUBESEAL_VERSION=$(curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/tags | jq -r '.[0].name' | cut -c 2-)
