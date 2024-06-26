@@ -13,6 +13,7 @@ install_k3s() {
   if ! command -v k3s &> /dev/null; then
     echo "K3s not found. Installing K3s..."
     curl -sfL https://get.k3s.io | sh -
+    export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
     echo "K3s installed successfully."
   else
     echo "K3s is already installed."
@@ -22,7 +23,7 @@ install_k3s() {
 install_coral_tpu_and_intel_gpu_drivers() {
   apt install gnupg -y
   echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
-  apt install libedgetpu1-std intel-media-va-driver i965-va-driver vainfo  -y
+  apt install libedgetpu1-std intel-media-va-driver vainfo  -y
 }
 
 # Step 1: Install kubeseal if not already installed
@@ -74,6 +75,9 @@ apply_secrets() {
     echo "Creating destination directory: $MOUNT_POINT"
     sudo mkdir -p "$MOUNT_POINT"
   fi
+
+  # Install NFS client tools
+  apt install nfs-common
 
   # Mount the NFS share
   echo "Mounting NFS share $NFS_SERVER:$NFS_SHARE to $MOUNT_POINT"
