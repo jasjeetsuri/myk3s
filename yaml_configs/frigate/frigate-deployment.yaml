@@ -23,6 +23,9 @@ spec:
       containers:
         - name: frigate
           image: ghcr.io/blakeblackshear/frigate:stable
+          resources:
+            limits:
+              kkohtaka.org/edgetpu: 1
           ports:
             - containerPort: 5000
               name: webui
@@ -47,6 +50,13 @@ spec:
               subPath: media
             - mountPath: /dev/shm
               name: dshm
+            - name: vaapi
+              mountPath: /dev/dri
+              readOnly: true
+ #           - mountPath: /dev/bus/usb
+ #             name: dev-usb
+          securityContext:
+            privileged: true
           env:
             - name: FRIGATE_RTSP_PASSWORD
               value: "password"  # replace with your RTSP password
@@ -59,8 +69,6 @@ spec:
             readOnly: false
             chapAuthSession: false
             fsType: ext4
-#          persistentVolumeClaim:
-#          claimName: frigate-config-pvc
         - name: media-volume
           persistentVolumeClaim:
             claimName: frigate-media-pvc
@@ -68,3 +76,10 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 100Mi
+        - name: vaapi
+          hostPath:
+            path: /dev/dri
+
+#        - name: dev-usb
+#          hostPath:
+#            path: /sys/bus/usb/devices/2-1
