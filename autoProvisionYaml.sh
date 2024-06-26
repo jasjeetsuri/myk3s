@@ -19,10 +19,16 @@ install_k3s() {
   fi
 }
 
+install_coral_tpu_and_intel_gpu_drivers() {
+  apt install gnupg -y
+  echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
+  apt install libedgetpu1 intel-media-va-driver i965-va-driver vainfo  -y
+}
+
 # Step 1: Install kubeseal if not already installed
 install_kubeseal() {
   if ! command --version kubeseal &> /dev/null; then
-    apt install wget sudo jq -y
+    apt install wget curl sudo jq -std -y
 
     # Fetch the latest sealed-secrets version using GitHub API
     KUBESEAL_VERSION=$(curl -s https://api.github.com/repos/bitnami-labs/sealed-secrets/tags | jq -r '.[0].name' | cut -c 2-)
@@ -61,6 +67,12 @@ apply_secrets() {
   if [ ! -d "$DEST_DIR" ]; then
     echo "Creating destination directory: $DEST_DIR"
     sudo mkdir -p "$DEST_DIR"
+  fi
+
+  # Ensure the mount point directory exists
+  if [ ! -d "$MOUNT_POINT" ]; then
+    echo "Creating destination directory: $MOUNT_POINT"
+    sudo mkdir -p "$MOUNT_POINT"
   fi
 
   # Mount the NFS share
@@ -142,6 +154,9 @@ install_git
 
 # Install iscsi tools if not found
 install_iscsi
+
+# Install coral TPU drivers
+install_coral_tpu_and_intel_gpu_drivers
 
 # Clone or pull the repository
 update_repo
