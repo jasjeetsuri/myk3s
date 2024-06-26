@@ -9,6 +9,6 @@ spec:
       port: 5038
       targetPort: 5037
   selector:
-    app: firetv
-    instance: masterbed
+    app: firetv-kitchen
+    instance: kitchen
   type: LoadBalancer
