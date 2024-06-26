@@ -4,6 +4,10 @@
 REPO_URL="https://github.com/jasjeetsuri/myk3s.git"
 TARGET_DIR="/var/lib/rancher/k3s/server/manifests/homelab"
 
+uninstall_k3s() {
+  /usr/local/bin/k3s-uninstall.sh
+}
+
 # Step 0: Install K3s if not already installed
 install_k3s() {
   if ! command -v k3s &> /dev/null; then
@@ -33,6 +37,9 @@ install_kubeseal() {
     tar -xvzf kubeseal-${KUBESEAL_VERSION}-linux-amd64.tar.gz kubeseal
     sudo install -m 755 kubeseal /usr/local/bin/kubeseal
     curl -L -o  /var/lib/rancher/k3s/server/manifests/kubeseal-controller.yaml "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/controller.yaml"
+
+    # Delete existing secret
+    kubectl get secrets -n kube-system -o name | grep '^secret/sealed-secrets' | awk -F'/' '{print $2}' | xargs -I {} kubectl delete secret {} -n kube-system
     echo "kubeseal installed successfully."
   else
     echo "kubeseal is already installed."
@@ -47,7 +54,7 @@ apply_secrets() {
   MOUNT_POINT="/mnt/nas"
   LOCAL_SECRETS_DIR="/mnt/nas/projects/secrets"
   SECRET_FILE="sealed-secrets-priv-key-backup.yaml"
-  DEST_DIR="/var/lib/rancher/k3s/server/manifests/"
+  DEST_DIR="/var/lib/rancher/k3s/server/manifests"
   KUBE_NAMESPACE="kube-system"
 
   # Ensure the destination directory exists
@@ -69,8 +76,8 @@ apply_secrets() {
   kubectl apply -f "$DEST_DIR/$SECRET_FILE" -n "$KUBE_NAMESPACE"
 
   # Unmount the NFS share
-  echo "Unmounting $MOUNT_POINT"
-  sudo umount "$MOUNT_POINT"
+  #echo "Unmounting $MOUNT_POINT"
+  #sudo umount "$MOUNT_POINT"
 }
 
 # Step 3: Install Git if not already installed
@@ -84,6 +91,18 @@ install_git() {
     echo "Git is already installed."
   fi
 }
+
+install_iscsi() {
+  if ! command -v iscsiadm &> /dev/null; then
+    echo "iscsiadm not found. Installing open-iscsi..."
+    apt update
+    apt install -y open-iscsi
+    echo "open-iscsi installed successfully."
+  else
+    echo "open-iscsi is already installed."
+  fi
+}
+
 
 # Step 4: Clone the repository if it doesn't exist, or pull the latest changes if it does
 update_repo() {
@@ -103,24 +122,11 @@ update_repo() {
   fi
 }
 
-# Step 5: Detect the server's current local IP address
-get_local_ip() {
-  LOCAL_IP=$(hostname -I | awk '{print $1}')
-  echo "Detected local IP address: $LOCAL_IP"
-}
-
-# Step 6: Search and replace IP addresses in the format 192.168.x.x, excluding files with "pv" in the name
-replace_ip_addresses() {
-  echo "Searching for IP addresses in format 192.168.x.x and replacing with $LOCAL_IP..."
-  
-  # Find files that do not contain "pv" in the filename and replace IP addresses
-  find "$TARGET_DIR" -type f ! -name "*pv*" -exec sed -i -E "s/192\.168\.[0-9]+\.[0-9]+/$LOCAL_IP/g" {} \;
-
-  echo "IP address replacement completed, excluding files with 'pv' in the name."
-}
-
 # Main execution
 echo "Starting setup..."
+
+# Remove existing k3s
+uninstall_k3s
 
 # Install K3s if not already installed
 install_k3s
@@ -129,18 +135,15 @@ install_k3s
 install_kubeseal
 
 # Apply secrets
-install_kubeseal
+apply_secrets
 
 # Install Git if not found
 install_git
 
+# Install iscsi tools if not found
+install_iscsi
+
 # Clone or pull the repository
 update_repo
 
-# Get the current local IP address
-get_local_ip
-
-# Replace IP addresses in the homelab folder, excluding files with "pv" in the name
-replace_ip_addresses
-
-echo "Setup, repository update, and IP address replacement completed."
+echo "Setup, repository, update, completed."
