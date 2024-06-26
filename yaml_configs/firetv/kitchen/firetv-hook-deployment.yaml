@@ -8,12 +8,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-     app: firetv
+     app: firetv-kitchen
      instance: kitchen
   template:
     metadata:
       labels:
-        app: firetv
+        app: firetv-kitchen
         instance: kitchen
     spec:
       containers:
