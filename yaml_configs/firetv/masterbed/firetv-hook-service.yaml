@@ -10,4 +10,5 @@ spec:
       targetPort: 5037
   selector:
     app: firetv
+    instance: masterbed
   type: LoadBalancer
