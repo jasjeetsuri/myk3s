@@ -92,6 +92,18 @@ install_git() {
   fi
 }
 
+install_iscsi() {
+  if ! command -v iscsiadm &> /dev/null; then
+    echo "iscsiadm not found. Installing open-iscsi..."
+    apt update
+    apt install -y open-iscsi
+    echo "open-iscsi installed successfully."
+  else
+    echo "open-iscsi is already installed."
+  fi
+}
+
+
 # Step 4: Clone the repository if it doesn't exist, or pull the latest changes if it does
 update_repo() {
   if [ ! -d "$TARGET_DIR" ]; then
@@ -110,7 +122,6 @@ update_repo() {
   fi
 }
 
-
 # Main execution
 echo "Starting setup..."
 
@@ -128,6 +139,9 @@ apply_secrets
 
 # Install Git if not found
 install_git
+
+# Install iscsi tools if not found
+install_iscsi
 
 # Clone or pull the repository
 update_repo
