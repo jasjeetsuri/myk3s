@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: firetv-hook-kitchen
-  namespace: firetv
+  namespace: firetv-kitchen
 
 spec:
   replicas: 1
