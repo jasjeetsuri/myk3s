@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: firetv-hook-masterbed
-  namespace: firetv
+  namespace: firetv-masterbed
 
 spec:
   replicas: 1
