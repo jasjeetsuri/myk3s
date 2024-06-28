@@ -10,5 +10,6 @@
    |-----masterbed
    |---frigate
    |---home-assistant
+   |---metallb
    |---mqtt
 ```
