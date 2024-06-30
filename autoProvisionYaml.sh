@@ -27,10 +27,10 @@ install_k3s() {
 }
 
 install_dependancies() {
-  apt install gnupg  wget curl sudo jq nfs-common git open-iscsi -y
   echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
-  apt install libedgetpu1-std intel-media-va-driver -y
+  curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
   apt update
+  apt install libedgetpu1-std gnupg  wget curl sudo jq nfs-common git open-iscsi intel-media-va-driver -y
 }
 
 install_kubeseal() {
@@ -116,11 +116,11 @@ echo "Starting setup..."
 # Remove existing k3s
 uninstall_k3s
 
-# Install K3s if not already installed
-install_k3s
-
 # Install dependancies
 install_dependancies
+
+# Install K3s if not already installed
+install_k3s
 
 # Install kubeseal if not already installed
 install_kubeseal
