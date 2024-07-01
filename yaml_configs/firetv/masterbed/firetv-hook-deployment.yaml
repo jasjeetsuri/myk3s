@@ -5,7 +5,7 @@ metadata:
   namespace: firetv-masterbed
 
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
      app: firetv-masterbed
