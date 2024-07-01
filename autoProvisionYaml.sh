@@ -15,6 +15,13 @@ uninstall_k3s() {
   fi
 }
 
+install_dependancies() {
+  echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
+  curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+  apt update
+  apt install libedgetpu1-std gnupg  wget curl sudo jq nfs-common git open-iscsi intel-media-va-driver -y
+}
+
 install_k3s() {
   if ! command -v k3s &> /dev/null; then
     echo "K3s not found. Installing K3s..."
@@ -24,13 +31,6 @@ install_k3s() {
   else
     echo "K3s is already installed."
   fi
-}
-
-install_dependancies() {
-  echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
-  curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-  apt update
-  apt install libedgetpu1-std gnupg  wget curl sudo jq nfs-common git open-iscsi intel-media-va-driver -y
 }
 
 install_kubeseal() {

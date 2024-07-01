@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wisenet-wave
+  namespace: wisenet-wave
+spec:
+  type: LoadBalancer
+  selector:
+    app: wisenet-wave
+  ports:
+  - name: wisenet-wave
+    port: 7001
+    targetPort: 7001

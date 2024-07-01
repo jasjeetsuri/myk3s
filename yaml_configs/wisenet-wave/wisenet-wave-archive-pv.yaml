@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: wisenet-wave-archive-pv
+  namespace: wisenet-wave
+spec:
+  capacity:
+    storage: 500Gi  # Adjust the storage size as needed
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /k3s/projects/wisenet-wave  # Static path on the NFS server
+    server: 192.168.1.238               # Your NFS server's IP
+  persistentVolumeReclaimPolicy: Retain

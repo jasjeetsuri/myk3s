@@ -12,4 +12,5 @@
    |---home-assistant
    |---metallb
    |---mqtt
+   |---wisenet-wave
 ```
