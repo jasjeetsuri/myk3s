@@ -62,6 +62,38 @@ install_kubeseal() {
   fi
 }
 
+
+create_kubectl_alias() {
+  # Define the alias
+  ALIAS_STRING="alias k='kubectl'"
+
+  # Define the kubectl completion command for bash
+  COMPLETION_STRING="source <(kubectl completion bash | sed 's/kubectl/k/g')"
+
+  # Add the alias to .bashrc if it doesn't already exist
+  if ! grep -q "$ALIAS_STRING" ~/.bashrc; then
+      echo "Adding kubectl alias 'k' to ~/.bashrc"
+      echo "$ALIAS_STRING" >> ~/.bashrc
+  else
+      echo "Alias 'k' for kubectl already exists in ~/.bashrc"
+  fi
+
+  # Add the completion to .bashrc if it doesn't already exist
+  if ! grep -q "$COMPLETION_STRING" ~/.bashrc; then
+      echo "Adding kubectl auto-completion for 'k' to ~/.bashrc"
+      echo "$COMPLETION_STRING" >> ~/.bashrc
+  else
+      echo "Kubectl auto-completion for 'k' already exists in ~/.bashrc"
+  fi
+
+  # Apply changes to the current shell session
+  echo "Applying changes..."
+  source ~/.bashrc
+
+  echo "Alias and auto-completion setup completed."
+}
+
+
 apply_secrets() {
   NFS_SERVER="192.168.1.238"
   NFS_SHARE="/k3s"
@@ -125,6 +157,9 @@ install_dependancies
 
 # Install K3s if not already installed
 install_k3s
+
+# Set alias k for kubectl cmd
+create_kubectl_alias
 
 # Install kubeseal if not already installed
 install_kubeseal
