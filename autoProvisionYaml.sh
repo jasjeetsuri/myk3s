@@ -87,9 +87,6 @@ create_kubectl_alias() {
   fi
 
   # Apply changes to the current shell session
-  echo "Applying changes..."
-  source ~/.bashrc
-
   echo "Alias and auto-completion setup completed."
 }
 
@@ -171,3 +168,4 @@ apply_secrets
 clone_repo
 
 echo "Setup, repository, update, completed."
+echo "Please run 'source ~/.bashrc' to apply changes in the current session."
