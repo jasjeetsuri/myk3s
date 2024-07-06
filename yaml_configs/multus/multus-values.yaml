@@ -1,0 +1,6 @@
+config:
+  cni_conf:
+    confDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
+    clusterNetwork: /var/lib/rancher/k3s/agent/etc/cni/net.d/10-flannel.conflist
+    binDir: /var/lib/rancher/k3s/data/current/bin/
+    kubeconfig: /var/lib/rancher/k3s/agent/etc/cni/net.d/multus.d/multus.kubeconfig

@@ -26,6 +26,12 @@ install_k3s() {
   fi
 }
 
+install_helm() {
+  curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+  chmod 700 get_helm.sh
+  ./get_helm.sh
+}
+
 install_dependancies() {
   echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -110,6 +116,13 @@ clone_repo() {
   fi
 }
 
+install_multus() {
+  helm repo add rke2-charts https://rke2-charts.rancher.io
+  helm repo update
+  helm install multus rke2-charts/rke2-multus -n kube-system --kubeconfig /etc/rancher/k3s/k3s.yaml --values /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/multus/multus-values.yaml
+}
+
+
 # Main execution
 echo "Starting setup..."
 
@@ -128,7 +141,13 @@ install_kubeseal
 # Apply secrets
 apply_secrets
 
+#Install helm
+install_helm
+
 # Clone or pull the repository
 clone_repo
+
+#Install multus
+install_multus
 
 echo "Setup, repository, update, completed."
