@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wisenet-wave-archive-pvc
+  namespace: wisenet-wave
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 500Gi  # Match or be less than the PV's capacity
+  volumeName: wisenet-wave-archive-pv  # Bind explicitly to the PV created above
+  storageClassName: ''

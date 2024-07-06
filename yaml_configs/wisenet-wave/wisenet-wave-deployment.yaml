@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: wisenet-wave
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wisenet-wave
+  namespace: wisenet-wave
+  labels:
+    app: wisenet-wave
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: wisenet-wave
+  template:
+    metadata:
+      labels:
+        app: wisenet-wave
+    spec:
+      containers:
+        - env:
+            - name: TZ
+              value: Europe/London
+          image: ptr727/wisenetwave
+          ports:
+          - containerPort: 7001
+          name: wisenet-wave
+          volumeMounts:
+            - mountPath: /config
+              name: wisenet-wave-config
+              subPath: config
+            - mountPath: /archive
+              name: wisenet-wave-archive
+              subPath: archive
+      volumes:
+        - name: wisenet-wave-config
+          persistentVolumeClaim:
+            claimName: wisenet-wave-config-pvc
+        - name: wisenet-wave-archive
+          persistentVolumeClaim:
+            claimName: wisenet-wave-archive-pvc
