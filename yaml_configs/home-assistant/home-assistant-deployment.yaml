@@ -23,6 +23,14 @@ spec:
     metadata:
       labels:
         app: home-assistant
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+          [{
+            "name": "multus-iot",
+            "namespace": "default",
+            "mac": "72:b4:c4:40:6c:2e",
+            "ips": ["192.168.1.190/24"]
+          }]
     spec:
       containers:
       - name: home-assistant
