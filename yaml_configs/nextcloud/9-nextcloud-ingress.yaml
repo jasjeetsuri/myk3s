@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nextcloud-ingress
+  namespace: nextcloud
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: nextcloud
+spec:
+  rules:
+  - host: cloud.jsuri.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: nextcloud
+            port:
+              number: 2000

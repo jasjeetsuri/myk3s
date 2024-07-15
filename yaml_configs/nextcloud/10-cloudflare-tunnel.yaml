@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflare-nextcloud
+  namespace: nextcloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflare-nextcloud
+  template:
+    metadata:
+      labels:
+        app: cloudflare-nextcloud
+        name: cloudflare-nextcloud
+    spec:
+      containers:
+        - name: cloudflare-nextcloud
+          image: cloudflare/cloudflared:latest
+          imagePullPolicy: Always
+          args:
+            - "tunnel"
+            - "--no-autoupdate"
+            - "run"
+            - "--token"
+            - "eyJhIjoiNzhkMjA0OTViOWQ1ODkyOTFjMDczMzQ1ZGMwOGE3ZGEiLCJ0IjoiNWY2YzFlZGUtZGYwNi00ZGRkLWJjMjQtYWYxMzExMjU1Y2I3IiwicyI6Ik1qazNOak01T1RrdFpHRXdOUzAwWkROaExUaGxOR0l0T0RSbE5XSXdNalEzWkRBeiJ9"  # Use environment variable

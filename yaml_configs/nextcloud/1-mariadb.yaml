@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mariadb-secrets
+  namespace: nextcloud
+type: Opaque
+data:
+  MYSQL_DATABASE: bmV4dGNsb3Vk 
+  MYSQL_USER: bmV4dGNsb3Vk 
+  MYSQL_PASSWORD: cGFzc3dvcmQ=
+  MYSQL_ROOT_PASSWORD: cGFzc3dvcmQ=
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb 
+  namespace: nextcloud
+  labels:
+    app: mariadb 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb 
+  template:
+    metadata:
+      labels:
+        app: mariadb 
+    spec:
+      volumes:
+      - name: mariadb-data
+        persistentVolumeClaim:
+          claimName: mariadb-pvc
+      containers:
+      - name: mariadb 
+        image: mariadb:latest 
+        ports:
+          - containerPort: 3306 
+        args:
+          - --transaction-isolation=READ-COMMITTED
+          - --binlog-format=ROW
+          - --max-connections=1000
+        env:
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_DATABASE
+                  name: mariadb-secrets
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_PASSWORD
+                  name: mariadb-secrets
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_USER
+                  name: mariadb-secrets
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_ROOT_PASSWORD
+                  name: mariadb-secrets
+        volumeMounts:
+        - name: mariadb-data
+          mountPath: /var/lib/mysql
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  namespace: nextcloud
+  labels:
+    app: mariadb
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mariadb

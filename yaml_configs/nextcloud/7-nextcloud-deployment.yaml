@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud
+  namespace: nextcloud
+  labels:
+    app: nextcloud 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextcloud 
+  template:
+    metadata:
+      labels:
+        app: nextcloud
+    spec:
+      containers:
+        - image: nextcloud:fpm
+          name: nextcloud 
+          ports:
+            - containerPort: 2000
+          env:
+            - name: REDIS_HOST
+              value: redis
+            - name: MYSQL_HOST
+              value: mariadb 
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_DATABASE
+                  name: mariadb-secrets
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_PASSWORD
+                  name: mariadb-secrets
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_USER
+                  name: mariadb-secrets
+            - name: NEXTCLOUD_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_PASSWORD
+                  name: mariadb-secrets 
+            - name: NEXTCLOUD_ADMIN_USER
+              value: "jas"
+            - name: NEXTCLOUD_TRUSTED_DOMAINS 
+              value: cloud.jsuri.com 
+          volumeMounts:
+            - mountPath: /var/www/html
+              name: nextcloud-storage
+              subPath: data
+      volumes:
+      - name: nextcloud-storage
+        persistentVolumeClaim: 
+          claimName: nextcloud-data-pvc
