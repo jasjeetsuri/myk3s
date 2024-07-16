@@ -4,56 +4,47 @@ metadata:
   name: nextcloud
   namespace: nextcloud
   labels:
-    app: nextcloud 
+    app: nextcloud
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nextcloud 
+      app: nextcloud
   template:
     metadata:
       labels:
         app: nextcloud
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+          [{
+            "name": "multus-iot",
+            "namespace": "default",
+            "mac": "b2:5a:1c:00:37:f4",
+            "ips": ["192.168.1.191/24"]
+          }]
     spec:
       containers:
-        - image: nextcloud:fpm
-          name: nextcloud 
+        - image: lscr.io/linuxserver/nextcloud:latest
+          name: nextcloud
           ports:
-            - containerPort: 2000
+            - containerPort: 80
           env:
-            - name: REDIS_HOST
-              value: redis
-            - name: MYSQL_HOST
-              value: mariadb 
-            - name: MYSQL_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  key: MYSQL_DATABASE
-                  name: mariadb-secrets
-            - name: MYSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: MYSQL_PASSWORD
-                  name: mariadb-secrets
-            - name: MYSQL_USER
-              valueFrom:
-                secretKeyRef:
-                  key: MYSQL_USER
-                  name: mariadb-secrets
-            - name: NEXTCLOUD_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: MYSQL_PASSWORD
-                  name: mariadb-secrets 
-            - name: NEXTCLOUD_ADMIN_USER
-              value: "jas"
-            - name: NEXTCLOUD_TRUSTED_DOMAINS 
-              value: cloud.jsuri.com 
+            - name: PUID
+              value: "999"
+            - name: PGID
+              value: "999"
           volumeMounts:
-            - mountPath: /var/www/html
-              name: nextcloud-storage
+            - mountPath: /data
+              name: nextcloud-data
               subPath: data
+            - mountPath: /config
+              name: nextcloud-config
+              subPath: config
       volumes:
-      - name: nextcloud-storage
-        persistentVolumeClaim: 
+      - name: nextcloud-data
+        persistentVolumeClaim:
           claimName: nextcloud-data-pvc
+      - name: nextcloud-config
+        persistentVolumeClaim:
+          claimName: nextcloud-config-pvc
+
