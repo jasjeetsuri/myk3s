@@ -1,0 +1,49 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: immich-cloudflare-secret
+  namespace: immich
+spec:
+  encryptedData:
+    token: AgCyxLqnIB2es+EuaUMiHDz6ngLiU5o8oyVuhzLUc+eG9FEtewEapioVhIIynejkvfOjcELk5ztjQG7dflM5D0qXSg8bTixMHwRotDJyIO5ZOC8HROx6EgelkfnLyGUOTY6gCP56TUy9+k4eZrXufBRyV1xkzaQajNNaiEGcYs1Nwdt474eoDDrxtEKDzEO2arbeze8IcPDtdep3LEQE8QYa7eW+XwCOMQ9ouUaxyaRTT9Jf9mLKglhEj/ZEVnaIHb8r29KjoYmhELNP097vFvP4Q27QvfsvpsabhHbASuLlwjzJdVzQly3C1bne8f3GVpm2AEfj8kz6aOXulbVbsVBZuAXx3MU/B0OuBl6pACFc5rn3HkPtwm63R8jIqnPIeLLKbr3cRDnjZX64KjwB2QCxA7J4zfWCBaBmU4ZOOUDfRP1pqI4tvGhwVHhT4pPCIFRv2kyyJfX/3wZkARqMxZx5CTDZjY4wsYAyihNGPgABN2YVI871wHpyMKEfvPXibpXpqXdw0eD/mQbpVSRu8SLOOLwVuwQARKM5RhXlBS5kw4DZWytW/sfO0hxpE7rj2EGbHdP6xevNaCDpaZkyvbjVy52R+MVSc4xVis1aKyh590spb+X215QnYKfi3dp1hdTKjhNrhH2pFQegY+H75DJNZZqHpAL0rESnhtsOWCzS5sVkm0XjFXm0m7FbOwN11mZXXTPbQUz3K/Xd6m56GeDsPSd3Mj1CcH5exSOI5VDm7cCmjdnIc6+aceig7vLhGapvRUztAj/nr4qw4swLxjWfB4hbjHTm7qDOZ/GVT2WY+vQqKNOXp436fFSO6AW8JgaW8ZSxL7qUtJBqREpts9eIdOZTVzYvrbfKn5WTP3fJVvY7X3lEXER4/1Z2G5+RnxBnqCer02mXXAoC25pGojzCSFWnHYUrUhS8nBuGSfjw5bJpwrPuybuu
+  template:
+    metadata:
+      creationTimestamp: null
+      name: immich-cloudflare-secret
+      namespace: immich
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflare-immich
+  namespace: immich
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflare-immich
+  template:
+    metadata:
+      labels:
+        app: cloudflare-immich
+        name: cloudflare-immich
+    spec:
+      containers:
+        - name: cloudflare-immich
+          image: cloudflare/cloudflared:latest
+          imagePullPolicy: Always
+          args:
+            - "tunnel"
+            - "--no-autoupdate"
+            - "run"
+            - "--token"
+            - "$(CLOUDFLARE_TOKEN)"  # Use environment variable
+          env:
+            - name: CLOUDFLARE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: immich-cloudflare-secret  # Name of the decrypted Secret
+                  key: token  # Key containing the token
