@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: immich-private
+  namespace: immich
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: immich
+spec:
+  rules:
+  - host: immich.jsuri.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: immich-server
+            port:
+              number: 3001

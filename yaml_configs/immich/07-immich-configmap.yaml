@@ -1,0 +1,22 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: immich-env
+  namespace: immich
+  labels:
+    app: immich
+data:
+  DB_DATABASE_NAME: "immich"
+  DB_HOSTNAME: "immich-database"
+  DB_USERNAME: "immich"
+  IMMICH_MACHINE_LEARNING_URL: "http://immich-machine-learning:3003"
+  REDIS_HOSTNAME: "redis.nextcloud.svc.cluster.local"
+  REDIS_PORT: "6379"
+  REDIS_DBINDEX: "0"
+  REDIS_PASSWORD: ""
+  DISABLE_REVERSE_GEOCODING: "false"
+  REVERSE_GEOCODING_PRECISION: "2"
+  PUBLIC_LOGIN_PAGE_MESSAGE: ""
+  PUID: "0"
+  PGID: "0"
+  DB_PASSWORD: "password"
