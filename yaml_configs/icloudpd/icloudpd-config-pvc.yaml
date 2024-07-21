@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: icloudpd-config-pvc
+  namespace: icloudpd
+  labels:
+    app: icloudpd
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi  # Match or be less than the PV's capacity
+  volumeName: icloudpd-config-pv  # Bind explicitly to the PV created above
+  storageClassName: ''

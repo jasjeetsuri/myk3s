@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: azcopy-midnight
+  namespace: azcopy
+spec:
+  schedule: "0 0 * * *"  # This schedule runs the job every day at midnight
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: azcopy
+              image: peterdavehello/azcopy:10.11.0
+              stdin: true
+              tty: true
+              env:
+                - name: AZCOPY_BUFFER_GB
+                  value: "4"
+              volumeMounts:
+                - name: ext-library
+                  mountPath: /photos
+                  subPath: icloud_photos
+                - name: logs
+                  mountPath: /root/.azcopy
+              command: ["/bin/sh"]
+              args: ["-c", "azcopy sync /photos 'https://nasbackupstore.blob.core.windows.net/photos?sp=TOKEN'"]
+              resources:
+                requests:
+                  memory: "4096Mi"
+                  cpu: "600m"
+                limits:
+                  memory: "4572Mi"
+                  cpu: "2"
+          restartPolicy: Never
+          volumes:
+            - name: ext-library
+              persistentVolumeClaim:
+                claimName: ext-photos-library-pvc
+            - name: logs
+              persistentVolumeClaim:
+                claimName: azcopy-logs-pvc
