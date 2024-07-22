@@ -26,13 +26,18 @@ spec:
               value: "4"
             - name: AZCOPY_CONCURRENCY_VALUE
               value: "30"
+            - name: SASTOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: azcopy-sas-token
+                  key: SASTOKEN
           volumeMounts:
             - name: k3s
               mountPath: /k3s
             - name: logs
               mountPath: /root/.azcopy
           command: ["/bin/sh"]
-          args: ["-c", "azcopy sync /k3s 'https://nasbackupstore.blob.core.windows.net/k3s?sp=racwdli&st=2024-07-21T12:28:32Z&se=2025-10-29T21:28:32Z&spr=https&sv=2022-11-02&sr=c&sig=YrLOxR5WEIKexQutpd4wDe3dLHtNupmmLSp03q6Pzzk%3D' --cap-mbps 50 --exclude-path='projects/frigate/media;projects/immich/library/thumbs;projects/nextcloud/data/appdata_oc37w82ykyup'"]
+          args: ["-c", "azcopy sync /k3s 'https://nasbackupstore.blob.core.windows.net/k3s?$SASTOKEN' --cap-mbps 50 --exclude-path='projects/frigate/media;projects/immich/library/thumbs;projects/nextcloud/data/appdata_oc37w82ykyup'"]
           resources:
               requests:
                 memory: "4096Mi"
