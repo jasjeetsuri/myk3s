@@ -37,7 +37,7 @@ spec:
             - name: logs
               mountPath: /root/.azcopy
           command: ["/bin/sh"]
-          args: ["-c", "azcopy sync /k3s 'https://nasbackupstore.blob.core.windows.net/k3s?$SASTOKEN' --cap-mbps 50 --exclude-path='projects/frigate/media;projects/immich/library/thumbs;projects/nextcloud/data/appdata_oc37w82ykyup'"]
+          args: ["-c", "azcopy sync /k3s https://nasbackupstore.blob.core.windows.net/k3s?$SASTOKEN --cap-mbps 50 --exclude-path='projects/frigate/media;projects/immich/library/thumbs;projects/nextcloud/data/appdata_oc37w82ykyup'"]
           resources:
               requests:
                 memory: "4096Mi"
