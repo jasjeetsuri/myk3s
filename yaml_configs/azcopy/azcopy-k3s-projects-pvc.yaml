@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: ext-photos-library-pvc
+  name: k3s-projects-pvc
   namespace: azcopy
   labels:
     app: azcopy
@@ -10,6 +10,6 @@ spec:
     - ReadOnlyMany
   resources:
     requests:
-      storage: 100Gi  # Match or be less than the PV's capacity
-  volumeName: ext-photos-library-pv  # Bind explicitly to the PV created above
+      storage: 5000Gi  # Match or be less than the PV's capacity
+  volumeName: k3s-projects-pv  # Bind explicitly to the PV created above
   storageClassName: ''

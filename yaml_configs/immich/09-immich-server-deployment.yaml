@@ -89,6 +89,8 @@ spec:
             - name: ext-library
               mountPath: /photos
               subPath: icloud_photos
+            - name: nas-photos
+              mountPath: /nas-photos
           resources: {}
       volumes:
         - name: library
@@ -97,3 +99,6 @@ spec:
         - name: ext-library
           persistentVolumeClaim:
             claimName: ext-immich-library-pvc
+        - name: nas-photos
+          persistentVolumeClaim:
+            claimName: nas-photos-pvc

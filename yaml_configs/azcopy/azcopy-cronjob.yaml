@@ -20,13 +20,12 @@ spec:
                 - name: AZCOPY_BUFFER_GB
                   value: "4"
               volumeMounts:
-                - name: ext-library
-                  mountPath: /photos
-                  subPath: icloud_photos
+                - name: k3s
+                  mountPath: /k3s
                 - name: logs
                   mountPath: /root/.azcopy
               command: ["/bin/sh"]
-              args: ["-c", "azcopy sync /photos 'https://nasbackupstore.blob.core.windows.net/photos?sp=TOKEN'"]
+              args: ["-c", "azcopy sync /k3s 'https://nasbackupstore.blob.core.windows.net/k3s?<SAS TOKEN>' --cap-mbps 50 --exclude-path='projects/frigate/media;projects/immich/library/thumbs;projects/nextcloud/data/appdata_oc37w82ykyup'"]
               resources:
                 requests:
                   memory: "4096Mi"
@@ -36,9 +35,9 @@ spec:
                   cpu: "2"
           restartPolicy: Never
           volumes:
-            - name: ext-library
+            - name: k3s
               persistentVolumeClaim:
-                claimName: ext-photos-library-pvc
+                claimName: k3s-projects-pvc
             - name: logs
               persistentVolumeClaim:
                 claimName: azcopy-logs-pvc

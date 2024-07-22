@@ -33,17 +33,17 @@ spec:
             - name: group
               value: users
             - name: group_id
-              value: "1000"
+              value: "999"
             - name: notification_days
               value: "7"
             - name: skip_check
               value: "true"
             - name: synchronisation_interval
-              value: "10"
+              value: "21600"
             - name: user
-              value: jas
+              value: systemd-journal
             - name: user_id
-              value: "1000"
+              value: "999"
           image: boredazfcuk/icloudpd:latest
           livenessProbe:
             exec:
