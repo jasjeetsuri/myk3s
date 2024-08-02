@@ -17,7 +17,9 @@ uninstall_k3s() {
 
 install_dependancies() {
   apt update
-  apt install curl gnupg wget sudo jq nfs-common git open-iscsi intel-media-va-driver -y
+  apt install curl gnupg wget sudo jq nfs-common git open-iscsi intel-media-va-driver bash-completion -y
+  # Source bash completion
+  . /etc/bash_completion
   echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
   apt update
@@ -41,13 +43,6 @@ install_helm() {
   curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
   chmod 700 get_helm.sh
   ./get_helm.sh
-}
-
-install_dependancies() {
-  echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
-  curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-  apt update
-  apt install libedgetpu1-std gnupg  wget curl sudo jq nfs-common git open-iscsi intel-media-va-driver -y
 }
 
 install_kubeseal() {
