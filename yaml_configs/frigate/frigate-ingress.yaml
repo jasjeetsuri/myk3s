@@ -8,7 +8,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: "web"
 spec:
   rules:
-    - host: frigate.example.com  # Replace with your domain
+    - host: frigate.jsuri.com  # Replace with your domain
       http:
         paths:
           - path: /
