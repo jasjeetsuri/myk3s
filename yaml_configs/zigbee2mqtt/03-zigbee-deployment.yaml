@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zigbee2mqtt
+  namespace: zigbee
+spec:
+  selector:
+    matchLabels:
+      app: zigbee
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: zigbee
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+          [{
+            "name": "multus-iot",
+            "namespace": "default",
+            "mac": "70:cb:57:bb:d4:a2",
+            "ips": ["192.168.1.194/24"]
+          }]
+    spec:
+      containers:
+      - image: koenkk/zigbee2mqtt:latest
+        name: zigbee
+        env:
+        - name: "ZIGBEE2MQTT_DATA"
+          value: "/data"
+        - name: "ZIGBEE2MQTT_CONFIG_MQTT_SERVER"
+          value: "mqtt://mosquitto-service.mosquitto.svc.cluster.local:1883"
+        - name: "ZIGBEE2MQTT_CONFIG_MQTT_BASE_TOPIC"
+          value: "zigbee2mqtt"
+        - name: "ZIGBEE2MQTT_CONFIG_PERMIT_JOIN"
+          value: "true"
+        - name: "ZIGBEE2MQTT_CONFIG_SERIAL_PORT"
+          value: "/dev/ttyUSB0"
+        #- name: "ZIGBEE2MQTT_CONFIG_ADVANCED_NETWORK_KEY"
+        #  value: "GENERATE"
+        - name: ZIGBEE2MQTT_CONFIG_MQTT_USER
+          value: "jas"
+        - name: ZIGBEE2MQTT_CONFIG_MQTT_PASSWORD
+          value: "password"
+        - name: ZIGBEE2MQTT_CONFIG_HOMEASSISTANT
+          value: "true"
+        - name: "TZ"
+          value: "Europe/London"
+        ports:
+        - containerPort: 8080
+          name: http
+        volumeMounts:
+        - name: data
+          mountPath: /data
+          subPath: data
+        - name: usb
+          mountPath: /dev/ttyUSB0
+        - name: udev
+          mountPath: /run/udev
+        securityContext:
+          privileged: true
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: zigbee-data-pvc
+      - name: usb
+        hostPath:
+          path: /dev/ttyUSB0
+      - name: udev
+        hostPath:
+          path: /run/udev

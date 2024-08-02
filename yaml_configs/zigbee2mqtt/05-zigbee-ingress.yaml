@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zigbee-private
+  namespace: zigbee
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: zigbee
+spec:
+  rules:
+  - host: zigbee.jsuri.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: zigbee
+            port:
+              number: 8085

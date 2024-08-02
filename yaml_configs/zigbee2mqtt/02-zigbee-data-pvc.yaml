@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: zigbee-data-pvc
+  namespace: zigbee
+  labels:
+    app: zigbee
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi  # Match or be less than the PV's capacity
+  volumeName: zigbee-data-pv  # Bind explicitly to the PV created above
+  storageClassName: ''
