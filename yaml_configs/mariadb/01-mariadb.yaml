@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: mariadb-secrets
-  namespace: nextcloud
+  namespace: mariadb
 type: Opaque
 data:
   MYSQL_DATABASE: bmV4dGNsb3Vk 
@@ -16,7 +16,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mariadb 
-  namespace: nextcloud
+  namespace: mariadb
   labels:
     app: mariadb 
 spec:
@@ -73,7 +73,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mariadb
-  namespace: nextcloud
+  namespace: mariadb
   labels:
     app: mariadb
 spec:

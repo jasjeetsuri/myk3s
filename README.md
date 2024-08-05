@@ -3,7 +3,6 @@
 ```
    |-yaml_configs
    |--azcopy
-   |--cloudflare
    |--compreface
    |--double-take
    |--firetv
