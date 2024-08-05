@@ -9,6 +9,6 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path: /k3s/projects/nextcloud-mariadb  # Static path on the NFS server
+    path: /k3s/projects/mariadb  # Static path on the NFS server
     server: 192.168.1.238               # Your NFS server's IP
   persistentVolumeReclaimPolicy: Retain
