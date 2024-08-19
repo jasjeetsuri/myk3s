@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: restic
+  namespace: restic
+spec:
+  type: LoadBalancer
+  selector:
+    app: restic
+  ports:
+  - name: restic
+    port: 9898
+    targetPort: 9898

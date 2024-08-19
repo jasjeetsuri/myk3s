@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: files-to-backup-pvc
+  namespace: restic
+  labels:
+    app: restic
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 5000Gi  # Match or be less than the PV's capacity
+  volumeName: files-to-backup-pv  # Bind explicitly to the PV created above
+  storageClassName: ''

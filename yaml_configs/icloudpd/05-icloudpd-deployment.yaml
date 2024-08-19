@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app: icloudpd
   name: icloudpd
   namespace: icloudpd
 spec:
@@ -44,6 +45,8 @@ spec:
               value: systemd-journal
             - name: user_id
               value: "999"
+            - name: mfa_provider
+              value: "webui"
           image: boredazfcuk/icloudpd:latest
           livenessProbe:
             exec:

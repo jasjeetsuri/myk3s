@@ -16,10 +16,17 @@ spec:
         app: fe
     spec:
       containers:
-        - image: 'exadel/compreface-fe:0.5.1'
+        - image: 'exadel/compreface-fe:latest'
           name: cf-fe
           ports:
             - containerPort: 80
+          env:
+            - name: CLIENT_MAX_BODY_SIZE
+              value: "10M"
+            - name: PROXY_READ_TIMEOUT
+              value: "60000ms"
+            - name: PROXY_CONNECT_TIMEOUT
+              value: "10000ms"
       restartPolicy: Always
 ---
 apiVersion: v1

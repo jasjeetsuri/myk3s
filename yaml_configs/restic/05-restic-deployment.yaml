@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restic
+  namespace: restic
+  labels:
+    app: restic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restic
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: restic
+    spec:
+      containers:
+        - name: restic
+          image: garethgeorge/backrest
+          ports:
+          - containerPort: 9898
+          env:
+            - name: BACKREST_DATA
+              value: "/data"
+            - name: BACKREST_CONFIG
+              value: "/config/config.json"
+            - name: XDG_CACHE_HOME
+              value: "/cache"
+            - name: TZ
+              value: "Europe/London"
+          volumeMounts:
+            - name: backrest-data
+              mountPath: /data
+              subPath: data
+            - name: backrest-data
+              mountPath: /config
+              subPath: config
+            - name: backrest-data
+              mountPath: /cache
+              subPath: cache
+            - name: data-to-backup
+              mountPath: /userdata
+            - name: backrest-data
+              mountPath: /repos
+              subPath: repos
+      restartPolicy: Always
+      volumes:
+        - name: backrest-data
+          persistentVolumeClaim:
+            claimName: restic-data-pvc
+        - name: data-to-backup
+          persistentVolumeClaim:
+            claimName: files-to-backup-pvc
