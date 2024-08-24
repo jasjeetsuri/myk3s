@@ -32,6 +32,13 @@ spec:
         - name: home-assistant-storage
           mountPath: /config
           subPath: config
+        resources:
+            requests:
+              memory: "1024Mi"
+              cpu: "1000m"
+            limits:
+              memory: "3096Mi"
+              cpu: "4"
       volumes:
       - name: home-assistant-storage
         persistentVolumeClaim:

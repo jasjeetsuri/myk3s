@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frigate
-          image: ghcr.io/blakeblackshear/frigate:stable
+          image: ghcr.io/blakeblackshear/frigate:0.14.0-beta2
           resources:
             limits:
               kkohtaka.org/edgetpu: 1
@@ -50,6 +50,13 @@ spec:
  #             name: dev-usb
           securityContext:
             privileged: true
+          resources:
+              requests:
+                memory: "256Mi"
+                cpu: "500m"
+              limits:
+                memory: "3096Mi"
+                cpu: "4"
           env:
             - name: FRIGATE_RTSP_PASSWORD
               value: "password"  # replace with your RTSP password

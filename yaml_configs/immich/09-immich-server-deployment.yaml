@@ -91,7 +91,13 @@ spec:
               subPath: icloud_photos
             - name: nas-photos
               mountPath: /nas-photos
-          resources: {}
+          resources:
+              requests:
+                memory: "1024Mi"
+                cpu: "1000m"
+              limits:
+                memory: "3096Mi"
+                cpu: "4"
       volumes:
         - name: library
           persistentVolumeClaim:
