@@ -4,6 +4,7 @@ metadata:
   name: azcopy-midnight
   namespace: azcopy
 spec:
+  suspend: true
   schedule: "0 0 * * *"  # This schedule runs the job every day at midnight
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
