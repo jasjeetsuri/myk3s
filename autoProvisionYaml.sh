@@ -25,6 +25,9 @@ install_dependancies() {
   apt update
   # install coral tpu driver
   apt install libedgetpu1-std -y
+
+  # increase file access for promtail
+  echo "fs.inotify.max_user_instances = 1524" | sudo tee -a /etc/sysctl.conf
 }
 
 
