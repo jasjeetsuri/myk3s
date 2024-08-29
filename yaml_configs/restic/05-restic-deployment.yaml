@@ -41,7 +41,7 @@ spec:
               mountPath: /cache
               subPath: cache
             - name: data-to-backup
-              mountPath: /userdata
+              mountPath: /projects
             - name: backrest-data
               mountPath: /repos
               subPath: repos
