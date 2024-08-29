@@ -17,7 +17,9 @@ uninstall_k3s() {
 
 install_dependancies() {
   apt update
-  apt install curl gnupg wget sudo jq nfs-common git open-iscsi intel-media-va-driver -y
+  apt install curl gnupg wget sudo jq nfs-common git open-iscsi intel-media-va-driver bash-completion -y
+  # Source bash completion
+  . /etc/bash_completion
   echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
   curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
   apt update
@@ -41,13 +43,6 @@ install_helm() {
   curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
   chmod 700 get_helm.sh
   ./get_helm.sh
-}
-
-install_dependancies() {
-  echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
-  curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-  apt update
-  apt install libedgetpu1-std gnupg  wget curl sudo jq nfs-common git open-iscsi intel-media-va-driver -y
 }
 
 install_kubeseal() {
@@ -81,7 +76,10 @@ create_kubectl_alias() {
   ALIAS_STRING="alias k='kubectl'"
 
   # Define the kubectl completion command for bash
-  COMPLETION_STRING="source <(kubectl completion bash | sed 's/kubectl/k/g')"
+  COMPLETION_STRING="complete -o default -F __start_kubectl k"
+
+  # Add autocomplete permanently to your bash shell.
+  ADD_PERMANENT_STRING="source <(kubectl completion bash)"
 
   # Add the alias to .bashrc if it doesn't already exist
   if ! grep -q "$ALIAS_STRING" ~/.bashrc; then
@@ -93,13 +91,23 @@ create_kubectl_alias() {
 
   # Add the completion to .bashrc if it doesn't already exist
   if ! grep -q "$COMPLETION_STRING" ~/.bashrc; then
-      echo "Adding kubectl auto-completion for 'k' to ~/.bashrc"
+      echo "Adding kubectl auto-completion command for 'k' to ~/.bashrc"
       echo "$COMPLETION_STRING" >> ~/.bashrc
+  else
+      echo "Kubectl auto-completion command for 'k' already exists in ~/.bashrc"
+  fi
+
+  # Add autocomplete permanently to .bashrc if it doesn't already exist
+  if ! grep -q "$ADD_PERMANENT_STRING" ~/.bashrc; then
+      echo "Adding kubectl auto-completion for 'k' to ~/.bashrc"
+      echo "$ADD_PERMANENT_STRING" >> ~/.bashrc
   else
       echo "Kubectl auto-completion for 'k' already exists in ~/.bashrc"
   fi
 
   # Apply changes to the current shell session
+  source ~/.bashrc
+  source /etc/bash_completion
   echo "Alias and auto-completion setup completed."
 }
 

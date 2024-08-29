@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: immich-database
+  namespace: immich
+  labels:
+    app: immich-database
+spec:
+  type: ClusterIP
+  selector:
+    app: immich-database
+  ports:
+    - name: tcp-postgresql
+      port: 5432
+      targetPort: 5432

@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: immich-library-pvc
+  namespace: immich
+  labels:
+    app: immich
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi  # Match or be less than the PV's capacity
+  volumeName: immich-library-pv  # Bind explicitly to the PV created above
+  storageClassName: ''

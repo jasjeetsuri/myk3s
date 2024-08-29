@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: restic
+  namespace: restic
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: restic
+spec:
+  rules:
+  - host: backup.jsuri.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: restic
+            port:
+              number: 9898

@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nas-photos-pvc
+  namespace: immich
+  labels:
+    app: immich
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 300Gi  # Match or be less than the PV's capacity
+  volumeName: nas-photos-pv # Bind explicitly to the PV created above
+  storageClassName: ''

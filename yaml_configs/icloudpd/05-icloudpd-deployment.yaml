@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: icloudpd
+  name: icloudpd
+  namespace: icloudpd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: icloudpd
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: icloudpd
+    spec:
+      containers:
+        - env:
+            - name: TZ
+              value: Europe/London
+            - name: authentication_type
+              value: 2FA
+            - name: auto_delete
+              value: "false"
+            - name: convert_heic_to_jpeg
+              value: "false"
+            - name: download_path
+              value: '/photos'
+            - name: folder_structure
+              value: '{:%Y/%m}'
+            - name: group
+              value: users
+            - name: group_id
+              value: "999"
+            - name: notification_days
+              value: "7"
+            - name: skip_check
+              value: "true"
+            - name: synchronisation_interval
+              value: "21600"
+            - name: user
+              value: systemd-journal
+            - name: user_id
+              value: "999"
+            - name: mfa_provider
+              value: "webui"
+          image: boredazfcuk/icloudpd:latest
+          livenessProbe:
+            exec:
+              command:
+                - /usr/local/bin/healthcheck.sh
+            failureThreshold: 3
+            initialDelaySeconds: 120
+            periodSeconds: 600
+            timeoutSeconds: 10
+          name: icloudpd
+          volumeMounts:
+            - mountPath: /config
+              name: icloudpd-config
+              subPath: config
+            - mountPath: /photos
+              name: icloudpd-photos
+              subPath: icloud_photos
+      restartPolicy: Always
+      volumes:
+        - name: icloudpd-config
+          persistentVolumeClaim:
+            claimName: icloudpd-config-pvc
+        - name: icloudpd-photos
+          persistentVolumeClaim:
+            claimName: icloudpd-photos-pvc

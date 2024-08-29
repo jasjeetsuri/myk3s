@@ -1,0 +1,49 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: cloudflare-token
+  namespace: home-assistant
+spec:
+  encryptedData:
+    token: AgCtFrDj/M2+vBMom2j0J5FF4eyDSu8d1V3Nhxfy5+31bxFV/KO40xyGa6FrvQ0NzghzeJMSVMg1JZBGerCvnDtF88nGK6te+916Zr2s5tLswD7u23y5xWRjKCplZd9CO1avCGVNN8eUBbCJv08qw7l62rXLAtLeVX/vz6F1Z2gC/qnkz3GfyYJLrDQFn7EBC0sRLltoebLPZc80UbdKHVul7mcz0C1DBexRNM+yHclY8wN0Xu/mvQE6Q0P4SPDtvAw7+KOhSFPKDW5y+sUT5QoYfxcR+/dcnMeUJoYoi363aSLEgWMhKGR4bLU8xIsDNa559XPZrunEQioegj+OdwluwQ/r+1nRC49/M9I2VsGuSgCHjA6fLLhFFV7ZghRZDZLnufPedmKSOdP9sRmf2XMCbknZ2BchzEXQb8rVPNHtRxqLx/QYxIqV74Frn2vEXn+zWzDk2AP6jlCpay/NFi8QSacmYxeGlSXBh/N3BAHTaJgM2r5O+MSPloYDa3vVofGrSFMs4iC6YXZM/qa2cLNhJUoSUgCGDiDLgnChQz7U90xmj0lQ3cGCxlxwjg7ZycvGeqz9T6kBbR9rC/Gwc1l1AWDH0cscZPlLAkqPF1/T8xTA5Wreztdosd8v9UUmRT4V+kjGh+F4+o45CMjAAPXyFURizlYdfYNLZqXt4R3AYAzH5dUJ+WxdTp63yeK3+X9oS1sZ1gaHJTkvUhl3sMdpLj6qCfeDJ91e0wsVk44lIHV6evWOTX2J9YS/0sq1pFXJQzt6bBdCAxP9K5Kz1czzrUBZXliY623omRgIETCPzTL+opJAjXRWKPjJ/CbJ3UB6FDlvqMo2w/QPJOl/99T1WR8s07OxNBmZzKKTGL5wsvWqbhsBw1i2b8wkGAmEiFAh6SlOQPw19xBUrIhxh2Pl5Uhfo7tqDOMq5pWlekwpgbzPbvCqcfop
+  template:
+    metadata:
+      creationTimestamp: null
+      name: cloudflare-token
+      namespace: home-assistant
+      
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflare
+  namespace: home-assistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflare
+  template:
+    metadata:
+      labels:
+        app: cloudflare
+        name: cloudflare
+    spec:
+      containers:
+        - name: cloudflare
+          image: cloudflare/cloudflared:latest
+          imagePullPolicy: Always
+          args:
+            - "tunnel"
+            - "--no-autoupdate"
+            - "run"
+            - "--token"
+            - "$(CLOUDFLARE_TOKEN)"  # Use environment variable
+          env:
+            - name: CLOUDFLARE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare-token  # Name of the decrypted Secret
+                  key: token  # Key containing the token

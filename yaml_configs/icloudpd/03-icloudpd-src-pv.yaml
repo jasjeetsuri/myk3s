@@ -1,0 +1,16 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: icloudpd-photos-pv
+  namespace: icloudpd
+  labels:
+    app: icloudpd
+spec:
+  capacity:
+    storage: 100Gi  # Adjust the storage size as needed
+  accessModes:
+    - ReadOnlyMany
+  nfs:
+    path: /k3s/projects/nextcloud/data/jasjeet/files/Photos # Static path on the NFS server
+    server: 192.168.1.238               # Your NFS server's IP
+  persistentVolumeReclaimPolicy: Retain

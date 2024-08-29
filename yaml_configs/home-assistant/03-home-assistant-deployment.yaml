@@ -1,12 +1,3 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: home-assistant
-
-
----
-
-# home-assistant-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -41,6 +32,13 @@ spec:
         - name: home-assistant-storage
           mountPath: /config
           subPath: config
+        resources:
+            requests:
+              memory: "1024Mi"
+              cpu: "1000m"
+            limits:
+              memory: "3096Mi"
+              cpu: "4"
       volumes:
       - name: home-assistant-storage
         persistentVolumeClaim:

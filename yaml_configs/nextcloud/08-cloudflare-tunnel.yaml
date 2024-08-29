@@ -1,0 +1,49 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: cloudflare-secret
+  namespace: nextcloud
+spec:
+  encryptedData:
+    token: AgCRCEQgvZVmKO0zC2kKZR6Tz9hIBOS7SuP3O8afNnak0uXSLgmJB3fRfbtrocaoUgGg4bYUTfqUtaxtEMi5SvFElSLanyFi3PxekR+ljQY8qpMr3o27IrAuS4DG8/r3evEyt4HQtG8P5kxieW8aQFetkZmEUfIYLz4dXcw12aAJPh1I1lyzx3MxPIBq+RcWG5o8ozdx6yHNzADgl45sBFwqgQerXgGFAUIt5hPi9xBAu1lKvfCgzzYaSzLmSFtc9jIYfn8hZrf9WxE3p+sdMvggeWV+hvBw4wDC8MwXGbKugCOWbiK1aPSqlmQLcoDboZnaUVtSY0vk/ImGQjAzN+hLEvw5PeMkRo8TE663nEmuDUgFYQaxVQ5AAAgDIlHRK2u2s6e9TaTHPLRivp5f7zHePw1gKEhG0SAdnF3zQwEU+FN+eddbbO6sQlgnaD04tztUFqsD/Y4bLZaSlQ2KhTTZLxL1Xf95HOEEc/HaVJewzzCP+ZJSF66UuEPwSJOeeuZ3nk/J+6htr7JzSfQeM6dNIeUGmlq0QtMiIxe68YhZ7DIHmBGvCH9nVN/mgIrisBagII8rLpZ21cvxGf/OcFtzeH5/IwtDUaQxBQEimBcUq2rIiMPB2xpRwgjQGLbHo3DzpAFE4dHF7BJ0j3ga72wTiZftESLRUPZc45ilQWn2j6JprD4vV2V1bwLA8b/2IqGVs91tDPu8P48bX63BgDAfOZBoWeMv+B1CvZRXbHrwenV/AkZuaRjTjRlSldWzZ9/w29FRfG0s35fwKDfL5XVRin2M8Ca9Olz+1iWZ8RK81OjnZ1sEi+6z6gFJ9UC9T2UXIMAXyQnwcgFyG4UMAvrwXsj7h6QGl7v4r4l/dEb6Aji0fU88CMiKEXoa37gdC9NQbfVoein7sG35tJCVej6wy71VMFoMSvyEE95/QXfpUzy/TYWwa2pZ
+  template:
+    metadata:
+      creationTimestamp: null
+      name: cloudflare-secret
+      namespace: nextcloud
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflare-nextcloud
+  namespace: nextcloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflare-nextcloud
+  template:
+    metadata:
+      labels:
+        app: cloudflare-nextcloud
+        name: cloudflare-nextcloud
+    spec:
+      containers:
+        - name: cloudflare-nextcloud
+          image: cloudflare/cloudflared:latest
+          imagePullPolicy: Always
+          args:
+            - "tunnel"
+            - "--no-autoupdate"
+            - "run"
+            - "--token"
+            - "$(CLOUDFLARE_TOKEN)"  # Use environment variable
+          env:
+            - name: CLOUDFLARE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare-secret  # Name of the decrypted Secret
+                  key: token  # Key containing the token

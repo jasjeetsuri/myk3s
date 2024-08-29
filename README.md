@@ -2,15 +2,19 @@
 
 ```
    |-yaml_configs
-   |---cloudflare
-   |---compreface
-   |---double-take
-   |---firetv
-   |-----kitchen
-   |-----masterbed
-   |---frigate
-   |---home-assistant
-   |---metallb
-   |---mqtt
-   |---wisenet-wave
+   |--azcopy
+   |--compreface
+   |--double-take
+   |--firetv
+   |---kitchen
+   |---masterbed
+   |--frigate
+   |--home-assistant
+   |--icloudpd
+   |--immich
+   |--mqtt
+   |--multus
+   |--nextcloud
+   |--wisenet-wave
+   |--zigbee2mqtt
 ```

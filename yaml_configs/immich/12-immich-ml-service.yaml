@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: immich-machine-learning
+  namespace: immich
+  labels:
+    app: immich-machine-learning
+spec:
+  type: ClusterIP
+  selector:
+    app: immich-machine-learning
+  ports:
+    - port: 3003
+      targetPort: 3003
+      protocol: TCP

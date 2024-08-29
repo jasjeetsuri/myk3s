@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: restic-data-pvc
+  namespace: restic
+  labels:
+    app: restic
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi  # Match or be less than the PV's capacity
+  volumeName: restic-data-pv  # Bind explicitly to the PV created above
+  storageClassName: ''

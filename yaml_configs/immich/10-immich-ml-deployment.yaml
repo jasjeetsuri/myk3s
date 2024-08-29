@@ -1,0 +1,65 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: immich-machine-learning
+  namespace: immich
+  labels:
+    app: immich-machine-learning
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: immich-machine-learning
+  template:
+    metadata:
+      labels:
+        app: immich-machine-learning
+    spec:
+      securityContext:
+        fsGroup: 0
+      serviceAccountName: default
+      automountServiceAccountToken: true
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      containers:
+        - name: immich-machine-learning
+          image: "ghcr.io/immich-app/immich-machine-learning:release"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3003
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: immich-env
+                  key: DB_PASSWORD
+            - name: TRANSFORMERS_CACHE
+              value: /cache
+          envFrom:
+            - configMapRef:
+                name: immich-env
+                optional: false
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ping
+              port: 3003
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ping
+              port: 3003
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 1
+          volumeMounts:
+            - name: cache
+              mountPath: /cache
+          resources: {}
+      volumes:
+        - name: cache
+          emptyDir: {}

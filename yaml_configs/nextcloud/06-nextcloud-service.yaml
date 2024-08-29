@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextcloud
+  namespace: nextcloud
+  labels:
+    app: nextcloud
+spec:
+  type: LoadBalancer
+  ports:
+  - name: nextcloud
+    port: 4000
+    targetPort: 80
+  selector:
+    app: nextcloud

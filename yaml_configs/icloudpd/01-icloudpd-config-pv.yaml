@@ -1,0 +1,16 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: icloudpd-config-pv
+  namespace: icloudpd
+  labels:
+    app: icloudpd
+spec:
+  capacity:
+    storage: 1Gi  # Adjust the storage size as needed
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /k3s/projects/icloudpd # Static path on the NFS server
+    server: 192.168.1.238               # Your NFS server's IP
+  persistentVolumeReclaimPolicy: Retain
