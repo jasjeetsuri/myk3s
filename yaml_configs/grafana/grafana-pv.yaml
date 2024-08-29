@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: grafana-pv
+  namespace: grafana
+spec:
+  capacity:
+    storage: 5Gi  # Adjust the storage size as needed
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    path: /k3s/projects/grafana  # Static path on the NFS server
+    server: 192.168.1.238               # Your NFS server's IP
+  persistentVolumeReclaimPolicy: Retain
