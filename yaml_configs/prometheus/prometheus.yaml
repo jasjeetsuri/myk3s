@@ -19,7 +19,6 @@ spec:
     - key: name
       operator: In
       values:
-      - longhorn-prometheus-servicemonitor
       - kube-state-metrics
       - node-exporter
       - kubelet
