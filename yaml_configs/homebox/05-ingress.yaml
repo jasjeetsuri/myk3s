@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: homebox-private
+  namespace: homebox
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: homebox
+spec:
+  rules:
+  - host: homebox.jsuri.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: homebox
+            port:
+              number: 7745

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homebox
+  namespace: homebox
+  labels:
+    app: homebox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: homebox
+  template:
+    metadata:
+      labels:
+        name: homebox
+        app: homebox
+    spec:
+      containers:
+        - name: homebox
+          image: ghcr.io/hay-kot/homebox:latest
+          ports:
+          - containerPort: 7745
+          volumeMounts:
+          - mountPath: /data
+            name: homebox-data
+            subPath: data
+      volumes:
+      - name: homebox-data
+        persistentVolumeClaim:
+          claimName: homebox-pvc
