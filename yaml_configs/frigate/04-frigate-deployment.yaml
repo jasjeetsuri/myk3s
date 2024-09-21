@@ -63,7 +63,7 @@ spec:
       volumes:
         - name: config-volume
           iscsi:
-            targetPortal: 192.168.1.238
+            targetPortal: 192.168.1.27
             iqn: iqn.2004-04.com.qnap:ts-219p:iscsi.frigate.8d257e
             lun: 0
             readOnly: false
