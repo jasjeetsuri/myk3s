@@ -9,6 +9,6 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path: /mnt/NAS/k3s/projects/wisenet-wave  # Static path on the NFS server
+    path: /mnt/NAS/k3s/k3s/projects/wisenet-wave  # Static path on the NFS server
     server: 192.168.1.27               # Your NFS server's IP
   persistentVolumeReclaimPolicy: Retain
