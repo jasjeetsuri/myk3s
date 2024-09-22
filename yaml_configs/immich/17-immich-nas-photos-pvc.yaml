@@ -12,4 +12,4 @@ spec:
     requests:
       storage: 300Gi  # Match or be less than the PV's capacity
   volumeName: nas-photos-pv # Bind explicitly to the PV created above
-  storageClassName: ''
+  storageClassName: 'smb'

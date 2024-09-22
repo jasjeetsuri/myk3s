@@ -1,8 +1,31 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: smb-creds
+  namespace: immich
+type: Opaque
+stringData:
+  username: "jas"
+  password: "password"
+
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: smb
+provisioner: smb.csi.k8s.io
+parameters:
+  source: "//192.168.1.27/My Files/Media/Photos"
+  csi.storage.k8s.io/node-publish-secret-name: "smb-creds"
+  csi.storage.k8s.io/node-publish-secret-namespace: "immich"
+
+---
+
 kind: PersistentVolume
 apiVersion: v1
 metadata:
   name: nas-photos-pv
-  namespace: immich
   labels:
     app: immich
 spec:
@@ -10,7 +33,13 @@ spec:
     storage: 300Gi  # Adjust the storage size as needed
   accessModes:
     - ReadOnlyMany
-  nfs:
-    path: /Multimedia/Photos # Static path on the NFS server
-    server: 192.168.1.27               # Your NFS server's IP
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: smb
+  csi:
+    driver: smb.csi.k8s.io
+    volumeHandle: nas-photos-pv
+    volumeAttributes:
+      source: "//192.168.1.27/My Files/Media/Photos"
+    nodeStageSecretRef:
+      name: smb-creds
+      namespace: immich
