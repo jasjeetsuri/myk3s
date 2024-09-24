@@ -16,7 +16,7 @@ metadata:
   name: smb
 provisioner: smb.csi.k8s.io
 parameters:
-  source: "//192.168.1.27/My Files/Media/Photos"
+  source: "//192.168.1.27/Files/Media/Photos"
   csi.storage.k8s.io/node-publish-secret-name: "smb-creds"
   csi.storage.k8s.io/node-publish-secret-namespace: "immich"
 
@@ -39,7 +39,7 @@ spec:
     driver: smb.csi.k8s.io
     volumeHandle: nas-photos-pv
     volumeAttributes:
-      source: "//192.168.1.27/My Files/Media/Photos"
+      source: "//192.168.1.27/Files/Media/Photos"
     nodeStageSecretRef:
       name: smb-creds
       namespace: immich
