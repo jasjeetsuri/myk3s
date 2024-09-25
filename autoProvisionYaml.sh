@@ -173,9 +173,9 @@ clone_repo() {
 install_multus() {
   helm repo add rke2-charts https://rke2-charts.rancher.io
   helm repo update
-  helm install multus rke2-charts/rke2-multus -n kube-system --kubeconfig /etc/rancher/k3s.yaml --values /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/multus/multus-values.yaml
+  helm install multus rke2-charts/rke2-multus -n kube-system --kubeconfig /etc/rancher/k3s/k3s.yaml  --values /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/multus/multus-values.yaml
   helm repo add csi-driver-smb https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/charts
-  helm install csi-smb csi-driver-smb/csi-driver-smb --namespace kube-system
+  helm install csi-smb csi-driver-smb/csi-driver-smb --namespace kube-system --kubeconfig /etc/rancher/k3s/k3s.yaml
 }
 
 
