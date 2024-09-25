@@ -10,7 +10,7 @@ data:
       grpc_listen_port: 0
 
     clients:
-    - url: http://10.43.165.214:3100/loki/api/v1/push
+    - url: http://loki.default.svc.cluster.local:3100/loki/api/v1/push
 
     positions:
       filename: /tmp/positions.yaml
