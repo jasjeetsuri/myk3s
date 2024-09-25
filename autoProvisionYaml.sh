@@ -108,9 +108,6 @@ create_kubectl_alias() {
       echo "Kubectl auto-completion for 'k' already exists in ~/.bashrc"
   fi
 
-
-  kubectl apply --server-side -f /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/prometheus/bundle.yaml
-  rm /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/prometheus/bundle.yaml
   # Apply changes to the current shell session
   source ~/.bashrc
   source /etc/bash_completion
@@ -171,6 +168,9 @@ clone_repo() {
 }
 
 install_multus() {
+  
+  kubectl apply --server-side -f /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/prometheus/bundle.yaml
+  rm /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/prometheus/bundle.yaml
   helm repo add rke2-charts https://rke2-charts.rancher.io
   helm repo update
   helm install multus rke2-charts/rke2-multus -n kube-system --kubeconfig /etc/rancher/k3s/k3s.yaml  --values /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/multus/multus-values.yaml
