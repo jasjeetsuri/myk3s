@@ -35,7 +35,7 @@ install_k3s() {
   if ! command -v k3s &> /dev/null; then
     echo "K3s not found. Installing K3s..."
     curl -sfL https://get.k3s.io | sh -
-    export KUBECONFIG=/etc/rancher/k3s.yaml
+    export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
     echo "K3s installed successfully."
   else
     echo "K3s is already installed."
