@@ -208,3 +208,27 @@ spec:
       storage: 1Gi  # Match or be less than the PV's capacity
   volumeName: keel-data-pv  # Bind explicitly to the PV created above
   storageClassName: ''
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keel
+  namespace: keel
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: keel
+spec:
+  rules:
+  - host: update.jsuri.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: keel
+            port:
+              number: 9300

@@ -1,3 +1,47 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zigbee
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: zigbee-data-pv
+  namespace: zigbee
+  labels:
+    app: zigbee
+spec:
+  capacity:
+    storage: 10Gi  # Adjust the storage size as needed
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    path: /mnt/NAS/k3s/projects/zigbee2mqtt  # Static path on the NFS server
+    server: 192.168.1.27               # Your NFS server's IP
+  persistentVolumeReclaimPolicy: Retain
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zigbee-data-pvc
+  namespace: zigbee
+  labels:
+    app: zigbee
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi  # Match or be less than the PV's capacity
+  volumeName: zigbee-data-pv  # Bind explicitly to the PV created above
+  storageClassName: ''
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -69,3 +113,45 @@ spec:
       - name: udev
         hostPath:
           path: /run/udev
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: zigbee
+  namespace: zigbee
+  labels:
+    app: zigbee
+spec:
+  ports:
+  - port: 8085
+    targetPort: 8080
+  selector:
+    app: zigbee
+  type: LoadBalancer
+
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zigbee-private
+  namespace: zigbee
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: zigbee
+spec:
+  rules:
+  - host: zigbee.jsuri.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: zigbee
+            port:
+              number: 8085

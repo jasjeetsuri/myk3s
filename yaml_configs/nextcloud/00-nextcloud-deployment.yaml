@@ -1,0 +1,171 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nextcloud
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nextcloud-config-pv
+  namespace: nextcloud
+spec:
+  capacity:
+    storage: 1Gi  # Adjust the storage size as needed
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/NAS/k3s/projects/nextcloud  # Static path on the NFS server
+    server: 192.168.1.27               # Your NFS server's IP
+  persistentVolumeReclaimPolicy: Retain
+
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nextcloud-config-pvc
+  namespace: nextcloud
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi  # Match or be less than the PV's capacity
+  volumeName: nextcloud-config-pv  # Bind explicitly to the PV created above
+  storageClassName: ''
+
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nextcloud-data-pv
+  namespace: nextcloud
+spec:
+  capacity:
+    storage: 1000Gi  # Adjust the storage size as needed
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/NAS/k3s/projects/nextcloud  # Static path on the NFS server
+    server: 192.168.1.27               # Your NFS server's IP
+  persistentVolumeReclaimPolicy: Retain
+
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nextcloud-data-pvc
+  namespace: nextcloud
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1000Gi  # Match or be less than the PV's capacity
+  volumeName: nextcloud-data-pv  # Bind explicitly to the PV created above
+  storageClassName: ''
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud
+  namespace: nextcloud
+  labels:
+    app: nextcloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextcloud
+  template:
+    metadata:
+      labels:
+        app: nextcloud
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |
+          [{
+            "name": "multus-iot",
+            "namespace": "default",
+            "mac": "b2:5a:1c:00:37:f4",
+            "ips": ["192.168.1.191/24"]
+          }]
+    spec:
+      containers:
+        - image: lscr.io/linuxserver/nextcloud:latest
+          name: nextcloud
+          ports:
+            - containerPort: 80
+          env:
+            - name: PUID
+              value: "999"
+            - name: PGID
+              value: "999"
+          volumeMounts:
+            - mountPath: /data
+              name: nextcloud-data
+              subPath: data
+            - mountPath: /config
+              name: nextcloud-config
+              subPath: config
+      volumes:
+      - name: nextcloud-data
+        persistentVolumeClaim:
+          claimName: nextcloud-data-pvc
+      - name: nextcloud-config
+        persistentVolumeClaim:
+          claimName: nextcloud-config-pvc
+
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextcloud
+  namespace: nextcloud
+  labels:
+    app: nextcloud
+spec:
+  type: LoadBalancer
+  ports:
+  - name: nextcloud
+    port: 4000
+    targetPort: 80
+  selector:
+    app: nextcloud
+
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nextcloud-ingress
+  namespace: nextcloud
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app: nextcloud
+spec:
+  rules:
+  - host: cloud.jsuri.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: nextcloud
+            port:
+              number: 4000
