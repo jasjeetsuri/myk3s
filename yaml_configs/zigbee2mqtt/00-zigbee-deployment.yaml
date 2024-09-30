@@ -77,7 +77,7 @@ spec:
         - name: "ZIGBEE2MQTT_CONFIG_MQTT_BASE_TOPIC"
           value: "zigbee2mqtt"
         - name: "ZIGBEE2MQTT_CONFIG_PERMIT_JOIN"
-          value: "true"
+          value: "false"
         - name: "ZIGBEE2MQTT_CONFIG_SERIAL_PORT"
           value: "/dev/ttyUSB0"
         #- name: "ZIGBEE2MQTT_CONFIG_ADVANCED_NETWORK_KEY"
