@@ -1,7 +1,10 @@
+
+
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  namespace: monitoring
   name: loki-configmap
 data:
   local-config.yaml: |
