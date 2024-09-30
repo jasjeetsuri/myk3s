@@ -45,10 +45,6 @@ spec:
               value: systemd-journal
             - name: user_id
               value: "999"
-            - name: mfa_provider
-              value: "webui"
-            - name: set_exif_datetime
-              value: true
           image: boredazfcuk/icloudpd:latest
           livenessProbe:
             exec:
