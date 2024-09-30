@@ -168,7 +168,7 @@ clone_repo() {
 }
 
 install_multus() {
-  
+  kubectl create namespace monitoring
   kubectl apply --server-side -f /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/prometheus/bundle.yaml
   rm /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/prometheus/bundle.yaml
   helm repo add rke2-charts https://rke2-charts.rancher.io
