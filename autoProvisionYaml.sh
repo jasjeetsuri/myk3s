@@ -117,7 +117,7 @@ create_kubectl_alias() {
 
 apply_secrets() {
   NFS_SERVER="192.168.1.27"
-  NFS_SHARE="mnt/NAS/k3s"
+  NFS_SHARE="mnt/nas/k3s"
   MOUNT_POINT="/mnt/nas"
   LOCAL_SECRETS_DIR="/mnt/nas/projects/secrets"
   SECRET_FILE="sealed-secrets-priv-key-backup.yaml"
