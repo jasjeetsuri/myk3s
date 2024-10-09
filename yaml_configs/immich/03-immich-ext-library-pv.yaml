@@ -1,16 +1,33 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: icloudphotossmb
+provisioner: smb.csi.k8s.io
+parameters:
+  source: "//192.168.1.27/Files/Media/Photos/"
+  csi.storage.k8s.io/node-publish-secret-name: "smb-creds"
+  csi.storage.k8s.io/node-publish-secret-namespace: "immich"
+
+---
+
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: ext-immich-library-pv
-  namespace: immich
+  name: nas-icloud-photos-pv
   labels:
     app: immich
 spec:
   capacity:
-    storage: 100Gi  # Adjust the storage size as needed
+    storage: 300Gi  # Adjust the storage size as needed
   accessModes:
     - ReadOnlyMany
-  nfs:
-    path: /mnt/nas/k3s/projects/nextcloud/data/jasjeet/files/Photos # Static path on the NFS server
-    server: 192.168.1.27               # Your NFS server's IP
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: icloudphotossmb
+  csi:
+    driver: smb.csi.k8s.io
+    volumeHandle: nas-icloud-photos-pv
+    volumeAttributes:
+      source: "//192.168.1.27/Files/Media/Photos/"
+    nodeStageSecretRef:
+      name: smb-creds
+      namespace: immich

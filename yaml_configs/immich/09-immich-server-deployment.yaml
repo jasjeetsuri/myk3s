@@ -104,7 +104,7 @@ spec:
             claimName: immich-library-pvc
         - name: ext-library
           persistentVolumeClaim:
-            claimName: ext-immich-library-pvc
+            claimName: nas-icloud-photos-pvc
         - name: nas-photos
           persistentVolumeClaim:
             claimName: nas-photos-pvc

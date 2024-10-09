@@ -13,4 +13,3 @@ spec:
   nfs:
     path: /mnt/nas/k3s/projects/immich  # Static path on the NFS server
     server: 192.168.1.27               # Your NFS server's IP
-  persistentVolumeReclaimPolicy: Retain

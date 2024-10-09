@@ -19,7 +19,7 @@ spec:
         - env:
             - name: ML_PORT
               value: "3000"
-          image: 'exadel/compreface-core:latest'
+          image: 'exadel/compreface-core:1.2.0-facenet'
           ports:
           - containerPort: 3000
           name: cf-core
