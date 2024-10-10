@@ -14,3 +14,52 @@ spec:
     path: /mnt/nas/k3s/projects # Static path on the NFS server
     server: 192.168.1.27               # Your NFS server's IP
   persistentVolumeReclaimPolicy: Retain
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: icloud-smb-creds
+  namespace: restic
+type: Opaque
+stringData:
+  username: "jas"
+  password: "password"
+
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: icloudphotosresticsmb
+provisioner: smb.csi.k8s.io
+parameters:
+  source: "//192.168.1.27/Files/Media/Photos/"
+  csi.storage.k8s.io/node-publish-secret-name: "icloud-smb-creds"
+  csi.storage.k8s.io/node-publish-secret-namespace: "restic"
+
+---
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: restic-icloud-photos-pv
+  labels:
+    app: restic
+spec:
+  capacity:
+    storage: 300Gi  # Adjust the storage size as needed
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: icloudphotosresticsmb
+  csi:
+    driver: smb.csi.k8s.io
+    volumeHandle: restic-icloud-photos-pv
+    volumeAttributes:
+      source: "//192.168.1.27/Files/Media/Photos/"
+    nodeStageSecretRef:
+      name: icloud-smb-creds
+      namespace: restic

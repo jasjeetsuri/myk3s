@@ -13,3 +13,21 @@ spec:
       storage: 5000Gi  # Match or be less than the PV's capacity
   volumeName: files-to-backup-pv  # Bind explicitly to the PV created above
   storageClassName: ''
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nas-icloud-photos-pvc
+  namespace: restic
+  labels:
+    app: restic
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 300Gi  # Match or be less than the PV's capacity
+  volumeName: restic-icloud-photos-pv  # Bind explicitly to the PV created above
+  storageClassName: 'icloudphotosresticsmb'

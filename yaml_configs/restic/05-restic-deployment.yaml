@@ -42,6 +42,8 @@ spec:
               subPath: cache
             - name: data-to-backup
               mountPath: /projects
+            - name: icloud-data
+              mountPath: /photos
             - name: backrest-data
               mountPath: /repos
               subPath: repos
@@ -50,6 +52,9 @@ spec:
         - name: backrest-data
           persistentVolumeClaim:
             claimName: restic-data-pvc
+        - name: icloud-data
+          persistentVolumeClaim:
+            claimName: nas-icloud-photos-pvc
         - name: data-to-backup
           persistentVolumeClaim:
             claimName: files-to-backup-pvc
