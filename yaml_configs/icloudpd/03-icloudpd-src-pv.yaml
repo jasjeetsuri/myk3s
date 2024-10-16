@@ -19,7 +19,12 @@ parameters:
   source: "//192.168.1.27/Files/Media/Photos"
   csi.storage.k8s.io/node-publish-secret-name: "smb-creds"
   csi.storage.k8s.io/node-publish-secret-namespace: "icloudpd"
-
+mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=3000
+  - gid=3000
+  
 ---
 
 kind: PersistentVolume
@@ -35,6 +40,11 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: icloudpd-smb
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=3000
+    - gid=3000
   csi:
     driver: smb.csi.k8s.io
     volumeHandle: icloudpd-photos-pv
