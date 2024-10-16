@@ -7,9 +7,9 @@ metadata:
     app: icloudpd
 spec:
   accessModes:
-    - ReadOnlyMany
+    - ReadWriteMany
   resources:
     requests:
-      storage: 100Gi  # Match or be less than the PV's capacity
-  volumeName: icloudpd-photos-pv  # Bind explicitly to the PV created above
-  storageClassName: ''
+      storage: 300Gi  # Match or be less than the PV's capacity
+  volumeName: icloudpd-photos-pv # Bind explicitly to the PV created above
+  storageClassName: 'icloudpd-smb'
