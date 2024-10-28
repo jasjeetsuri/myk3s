@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ewn
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ewn
+  namespace: ewn
+  labels:
+    app: ewn
+spec:
+  selector:
+    matchLabels:
+      app: ewn
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ewn
+    spec:
+      containers:
+        - env:
+            - name: API_KEY
+              value: 869ba49be4b44611c8975e6f5f5c6f429e9bae4a50f3368a3781efedb0db69b2ed90c49dacc4e98c2618ef915fed284ba152cf6e9e2ad5e1260f5454489f5b5487b454cdf5ae847f14fb7c893338dc829207a634c86f7e9a0e940f0aa1dd4e95ccfd2d1aa0a7fc720d4c7002f6402366b54f7b1061670f746c2a4e7cc67a7824
+          image: ghcr.io/erwin-schrodinger-token/ewn-box-opener:latest
+          name: ewn
