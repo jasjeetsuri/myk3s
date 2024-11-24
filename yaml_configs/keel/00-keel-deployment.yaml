@@ -218,6 +218,7 @@ metadata:
   namespace: keel
   annotations:
     kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-production
   labels:
     app: keel
 spec:
@@ -232,3 +233,7 @@ spec:
             name: keel
             port:
               number: 9300
+  tls:
+  - hosts:
+    - update.jsuri.com # Change by your domain
+    secretName: update-jsuri-com-tls

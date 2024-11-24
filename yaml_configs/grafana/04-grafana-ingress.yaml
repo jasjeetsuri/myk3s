@@ -5,6 +5,7 @@ metadata:
   namespace: monitoring
   annotations:
     kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-production
   labels:
     app: grafana
 spec:
@@ -19,3 +20,8 @@ spec:
             name: grafana
             port:
               number: 3020
+  tls:
+  - hosts:
+    - grafana.jsuri.com # Change by your domain
+    secretName: grafana-jsuri-com-tls
+

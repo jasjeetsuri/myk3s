@@ -176,6 +176,7 @@ install_multus() {
   helm install multus rke2-charts/rke2-multus -n kube-system --kubeconfig /etc/rancher/k3s/k3s.yaml  --values /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/multus/multus-values.yaml
   helm repo add csi-driver-smb https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/charts
   helm install csi-smb csi-driver-smb/csi-driver-smb --namespace kube-system --kubeconfig /etc/rancher/k3s/k3s.yaml
+  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.2/cert-manager.yaml
 }
 
 

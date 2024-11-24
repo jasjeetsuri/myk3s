@@ -5,7 +5,8 @@ metadata:
   namespace: frigate
   annotations:
     kubernetes.io/ingress.class: "traefik"
-    traefik.ingress.kubernetes.io/router.entrypoints: "web"
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    #traefik.ingress.kubernetes.io/router.middlewares: default-authentik-auth-proxy@kubernetescrd
 spec:
   rules:
     - host: frigate.jsuri.com  # Replace with your domain
@@ -18,3 +19,7 @@ spec:
                 name: frigate-service
                 port:
                   number: 5000
+  tls:
+  - hosts:
+    - frigate.jsuri.com # Change by your domain
+    secretName: frigate-jsuri-com-tls

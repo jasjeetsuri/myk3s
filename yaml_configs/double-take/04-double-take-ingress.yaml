@@ -5,7 +5,7 @@ metadata:
   namespace: double-take
   annotations:
     kubernetes.io/ingress.class: "traefik"
-    traefik.ingress.kubernetes.io/router.entrypoints: "web"
+    cert-manager.io/cluster-issuer: letsencrypt-production
 spec:
   rules:
     - host: dt.jsuri.com  # Replace with your domain
@@ -18,3 +18,7 @@ spec:
                 name: double-take
                 port:
                   number: 3000
+  tls:
+  - hosts:
+    - dt.jsuri.com # Change by your domain
+    secretName: dt-jsuri-com-tls

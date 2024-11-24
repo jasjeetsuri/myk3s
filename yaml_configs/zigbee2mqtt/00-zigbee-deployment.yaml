@@ -141,6 +141,7 @@ metadata:
   namespace: zigbee
   annotations:
     kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-production
   labels:
     app: zigbee
 spec:
@@ -155,3 +156,7 @@ spec:
             name: zigbee
             port:
               number: 8085
+  tls:
+  - hosts:
+    - zigbee.jsuri.com # Change by your domain
+    secretName: zigbee-jsuri-com-tls

@@ -99,6 +99,7 @@ metadata:
   namespace: homebox
   annotations:
     kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-production
   labels:
     app: homebox
 spec:
@@ -113,3 +114,7 @@ spec:
             name: homebox
             port:
               number: 7745
+  tls:
+  - hosts:
+    - homebox.jsuri.com # Change by your domain
+    secretName: homebox-jsuri-com-tls
