@@ -37,8 +37,8 @@ install_k3s() {
     curl -sfL https://get.k3s.io | sh -
     export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
     echo "K3s installed successfully."
-    sleep 60
-    echo "Sleeping 60 sec"
+    echo "Sleeping 15 sec"
+    sleep 15
   else
     echo "K3s is already installed."
   fi
@@ -70,8 +70,6 @@ install_kubeseal() {
     # Delete existing secret
     kubectl get secrets -n kube-system -o name | grep '^secret/sealed-secrets' | awk -F'/' '{print $2}' | xargs -I {} kubectl delete secret {} -n kube-system
     echo "kubeseal installed successfully."
-    sleep 10
-    echo "Sleeping 10 sec"
   else
     echo "kubeseal is already installed."
   fi
@@ -165,8 +163,11 @@ clone_repo() {
   if [ ! -d ".git" ]; then
     echo "No Git repository found in $TARGET_DIR. Cloning repository..."
     kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.2/cert-manager.yaml
-    sleep 15
     git clone "$REPO_URL" .
+    helm install multus rke2-charts/rke2-multus -n kube-system --kubeconfig /etc/rancher/k3s/k3s.yaml  --values /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/multus/multus-values.yaml
+    kubectl create namespace monitoring
+    kubectl apply --server-side -f /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/prometheus/bundle.yaml
+    rm /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/prometheus/bundle.yaml
   else
     echo "Git repository found in $TARGET_DIR. Pulling latest changes..."
     git pull origin main  # Adjust 'main' to your default branch if necessary
@@ -174,18 +175,12 @@ clone_repo() {
 }
 
 install_multus() {
-  kubectl create namespace monitoring
-  kubectl apply --server-side -f /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/prometheus/bundle.yaml
-  rm /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/prometheus/bundle.yaml
+
   
   helm repo add rke2-charts https://rke2-charts.rancher.io
-  helm repo update
-  helm install multus rke2-charts/rke2-multus -n kube-system --kubeconfig /etc/rancher/k3s/k3s.yaml  --values /var/lib/rancher/k3s/server/manifests/homelab/yaml_configs/multus/multus-values.yaml
-  
   helm repo add csi-driver-smb https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/charts
+  helm repo update
   helm install csi-smb csi-driver-smb/csi-driver-smb --namespace kube-system --kubeconfig /etc/rancher/k3s/k3s.yaml
-  sleep 30
-  echo "Sleeping 30 sec"
 }
 
 
