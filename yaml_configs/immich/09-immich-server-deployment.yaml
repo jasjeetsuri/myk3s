@@ -69,17 +69,17 @@ spec:
           livenessProbe:
             failureThreshold: 120
             httpGet:
-              path: /server-info/ping
-              port: 3001
-            initialDelaySeconds: 0
+              path: /server/ping
+              port: 2283
+            initialDelaySeconds: 10
             periodSeconds: 120
             timeoutSeconds: 1
           readinessProbe:
             failureThreshold: 120
             httpGet:
-              path: /server-info/ping
-              port: 3001
-            initialDelaySeconds: 0
+              path: /server/ping
+              port: 2283
+            initialDelaySeconds: 10
             periodSeconds: 120
             timeoutSeconds: 1
           volumeMounts:
@@ -91,13 +91,6 @@ spec:
               subPath: icloud_photos
             - name: nas-photos
               mountPath: /nas-photos
-          resources:
-              requests:
-                memory: "1024Mi"
-                cpu: "1000m"
-              limits:
-                memory: "3096Mi"
-                cpu: "4"
       volumes:
         - name: library
           persistentVolumeClaim:

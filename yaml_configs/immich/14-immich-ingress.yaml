@@ -18,4 +18,4 @@ spec:
           service:
             name: immich-server
             port:
-              number: 3001
+              number: 2283

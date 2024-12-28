@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frigate
-          image: ghcr.io/blakeblackshear/frigate:stable
+          image: ghcr.io/blakeblackshear/frigate:0.13.2
           resources:
             limits:
               kkohtaka.org/edgetpu: 1

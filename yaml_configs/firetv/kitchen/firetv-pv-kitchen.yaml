@@ -1,0 +1,15 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: firetv-kitchen-pv
+  labels:
+    app: firetv-kitchen
+spec:
+  capacity:
+    storage: 1Gi  # Adjust the storage size as needed
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/nas/k3s/projects/firetv # Static path on the NFS server
+    server: 192.168.1.27               # Your NFS server's IP
+  persistentVolumeReclaimPolicy: Retain

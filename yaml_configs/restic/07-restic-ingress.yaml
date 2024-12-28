@@ -5,6 +5,8 @@ metadata:
   namespace: restic
   annotations:
     kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    traefik.ingress.kubernetes.io/router.middlewares: default-redirect-to-https@kubernetescrd
   labels:
     app: restic
 spec:
@@ -19,3 +21,8 @@ spec:
             name: restic
             port:
               number: 9898
+  tls:
+  - hosts:
+    - backup.jsuri.com # Change by your domain
+    secretName: backup-jsuri-com-tls
+

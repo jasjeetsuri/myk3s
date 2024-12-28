@@ -1,16 +1,55 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: smb-creds
+  namespace: icloudpd
+type: Opaque
+stringData:
+  username: "jas"
+  password: "password"
+
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: icloudpd-smb
+provisioner: smb.csi.k8s.io
+parameters:
+  source: "//192.168.1.27/Files/Media/Photos"
+  csi.storage.k8s.io/node-publish-secret-name: "smb-creds"
+  csi.storage.k8s.io/node-publish-secret-namespace: "icloudpd"
+mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=3000
+  - gid=3000
+  
+---
+
 kind: PersistentVolume
 apiVersion: v1
 metadata:
   name: icloudpd-photos-pv
-  namespace: icloudpd
   labels:
     app: icloudpd
 spec:
   capacity:
-    storage: 100Gi  # Adjust the storage size as needed
+    storage: 300Gi  # Adjust the storage size as needed
   accessModes:
-    - ReadOnlyMany
-  nfs:
-    path: /mnt/nas/k3s/projects/nextcloud/data/jasjeet/files/Photos # Static path on the NFS server
-    server: 192.168.1.27               # Your NFS server's IP
+    - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: icloudpd-smb
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=3000
+    - gid=3000
+  csi:
+    driver: smb.csi.k8s.io
+    volumeHandle: icloudpd-photos-pv
+    volumeAttributes:
+      source: "//192.168.1.27/Files/Media/Photos"
+    nodeStageSecretRef:
+      name: smb-creds
+      namespace: icloudpd

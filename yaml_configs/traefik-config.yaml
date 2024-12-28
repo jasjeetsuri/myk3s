@@ -9,7 +9,14 @@ spec:
       enabled: true
     ports:
       traefik:
-        expose: true # this is not recommended in production deployments, but I want to be able to see my dashboard locally
+        port: 9000
+        expose:
+          default: true
+        exposedPort: 9000
+        protocol: TCP
     logs:
       access:
         enabled: true
+    api:
+      insecure: true
+      dashboard: true

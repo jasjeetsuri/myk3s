@@ -26,3 +26,11 @@ spec:
           name: firetv-hook-masterbed
           ports:
             - containerPort: 5037
+          volumeMounts:
+            - name: firetv-keys
+              mountPath: /root/.android
+              subPath: masterbed
+      volumes:
+      - name: firetv-keys
+        persistentVolumeClaim:
+          claimName: firetv-masterbed-pvc
